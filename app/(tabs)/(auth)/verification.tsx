@@ -1,22 +1,23 @@
+import { Ionicons } from "@expo/vector-icons"; // Expo icon library
+import { router } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  TextInput,
+  Keyboard,
+  Platform,
   Pressable,
   StyleSheet,
-  Platform,
+  Text,
+  TextInput,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from "react-native";
-import { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons"; // Expo icon library
 
 export default function VerificationScreen() {
   const [code, setCode] = useState("");
   const [timer, setTimer] = useState(15);
   const inputRef = useRef<TextInput>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     if (timer === 0) return;
@@ -53,7 +54,13 @@ export default function VerificationScreen() {
               onPress={() => inputRef.current?.focus()}
             >
               {[...Array(6)].map((_, index) => (
-                <View key={index} style={styles.codeBox}>
+                <View
+                  key={index}
+                  style={[
+                    styles.codeBox,
+                    activeIndex === index && styles.codeBoxActive, // apply focus style
+                  ]}
+                >
                   <Text style={styles.codeDigit}>{code[index] || ""}</Text>
                 </View>
               ))}
@@ -65,9 +72,11 @@ export default function VerificationScreen() {
               keyboardType="numeric"
               value={code}
               onChangeText={(val) => {
-                if (val.length <= 6) setCode(val);
+                if (val.length <= 6) {
+                  setCode(val);
+                  setActiveIndex(val.length); // track current box being typed
+                }
               }}
-              autoFocus
             />
 
             <Text style={styles.timerText}>
@@ -108,6 +117,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     marginBottom: 24,
+  },
+  codeBoxActive: {
+    borderColor: "#FFFFFF", // bright border when focused
   },
   headerTitle: {
     color: "#fff",

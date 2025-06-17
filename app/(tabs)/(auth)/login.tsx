@@ -1,7 +1,6 @@
 import { router } from "expo-router";
 import {
   ImageBackground,
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
@@ -10,7 +9,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginScreen() {
   return (
@@ -19,44 +17,44 @@ export default function LoginScreen() {
       style={styles.background}
       resizeMode="cover"
     >
-      <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
-        <KeyboardAvoidingView
-          style={styles.overlay}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-        >
-          <ScrollView
-            contentContainerStyle={styles.loginBox}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
+      <ScrollView
+        contentContainerStyle={styles.loginBox}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.logoContainer}>
+          {/* <Image
+            source={require("@/assets/images/gothamlogo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          /> */}
+        </View>
+
+        <View style={styles.form}>
+          <Text style={styles.title}>Welcome To Gotham Auto</Text>
+          <Text style={styles.subtitle}>
+            Start by entering your email or phone number to log in.
+          </Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your email or phone number"
+            placeholderTextColor="#aaa"
+          />
+
+          <Pressable
+            style={styles.button}
+            onPress={() => router.push("/verification")}
           >
-            <View style={styles.form}>
-              <Text style={styles.title}>Welcome To Gotham Auto</Text>
-              <Text style={styles.subtitle}>
-                Start by entering your email or phone number to log in.
-              </Text>
+            <Text style={styles.buttonText}>Login</Text>
+          </Pressable>
 
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your email or phone number"
-                placeholderTextColor="#aaa"
-              />
-
-              <Pressable
-                style={styles.button}
-                onPress={() => router.push("/verification")}
-              >
-                <Text style={styles.buttonText}>Login</Text>
-              </Pressable>
-
-              <Text style={styles.footer}>
-                We’ll send you a one-time code to verify your identity.{"\n"}No
-                password needed.
-              </Text>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+          <Text style={styles.footer}>
+            We’ll send you a one-time code to verify your identity.{"\n"}No
+            password needed.
+          </Text>
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -66,6 +64,17 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%",
+  },
+
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 32,
+    marginTop: 40, // Adjust as needed
+  },
+
+  logo: {
+    width: 180,
+    height: 40,
   },
 
   safeArea: {

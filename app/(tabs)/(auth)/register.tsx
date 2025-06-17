@@ -111,7 +111,7 @@ export default function RegisterScreen() {
           <Pressable
             style={[styles.button, { opacity: isFormComplete ? 1 : 0.5 }]}
             disabled={!isFormComplete}
-            onPress={() => router.push("/")}
+            onPress={() => router.push("/garage-setup")}
           >
             <Text style={styles.buttonText}>Next →</Text>
           </Pressable>

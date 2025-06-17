@@ -1,3 +1,4 @@
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
@@ -24,20 +25,55 @@ export default function GarageSetupScreen() {
     color: "",
     plate: "",
   });
-
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { showActionSheetWithOptions } = useActionSheet();
 
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const isComplete = form.make && form.model && form.year && form.color;
 
-  const handleSelectImage = async () => {
+  const handleImageAction = () => {
+    showActionSheetWithOptions(
+      {
+        title: "Upload Photo",
+        options: ["Take photo", "Select photo", "Cancel"],
+        cancelButtonIndex: 2,
+      },
+      async (selectedIndex) => {
+        if (selectedIndex === 0) {
+          await handleTakePhoto();
+        } else if (selectedIndex === 1) {
+          await handleSelectPhoto();
+        }
+      }
+    );
+  };
+
+  const handleTakePhoto = async () => {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permission.granted) return;
+
+    setLoading(true);
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+    setLoading(false);
+  };
+
+  const handleSelectPhoto = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) return;
+
     setLoading(true);
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 0.7,
     });
@@ -54,7 +90,6 @@ export default function GarageSetupScreen() {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        {/* Header */}
         <View style={styles.header}>
           <Pressable onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={24} color="#fff" />
@@ -62,7 +97,6 @@ export default function GarageSetupScreen() {
           <Text style={styles.headerTitle}>Garage Setup</Text>
         </View>
 
-        {/* Scrollable form */}
         <ScrollView contentContainerStyle={styles.form}>
           <Text style={styles.title}>Next, Let’s Add Your Vehicle</Text>
           <Text style={styles.subtitle}>
@@ -70,8 +104,7 @@ export default function GarageSetupScreen() {
             add more later.
           </Text>
 
-          {/* Photo uploader */}
-          <Pressable style={styles.imageBox} onPress={handleSelectImage}>
+          <Pressable style={styles.imageBox} onPress={handleImageAction}>
             {loading ? (
               <ActivityIndicator size="large" color="#fff" />
             ) : image ? (
@@ -88,55 +121,37 @@ export default function GarageSetupScreen() {
             )}
           </Pressable>
 
-          {/* Form fields */}
-          <Text style={styles.label}>Vehicle Make</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g. Toyota"
-            placeholderTextColor="#aaa"
-            value={form.make}
-            onChangeText={(val) => handleChange("make", val)}
-          />
-
-          <Text style={styles.label}>Model</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g. Camry"
-            placeholderTextColor="#aaa"
-            value={form.model}
-            onChangeText={(val) => handleChange("model", val)}
-          />
-
-          <Text style={styles.label}>Year</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g. 2021"
-            placeholderTextColor="#aaa"
-            keyboardType="numeric"
-            value={form.year}
-            onChangeText={(val) => handleChange("year", val)}
-          />
-
-          <Text style={styles.label}>Color</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g. Midnight Blue"
-            placeholderTextColor="#aaa"
-            value={form.color}
-            onChangeText={(val) => handleChange("color", val)}
-          />
-
-          <Text style={styles.label}>License Plate (Optional)</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="e.g. ABC-1234"
-            placeholderTextColor="#aaa"
-            value={form.plate}
-            onChangeText={(val) => handleChange("plate", val)}
-          />
+          {(["make", "model", "year", "color", "plate"] as const).map(
+            (field) => (
+              <View key={field}>
+                <Text style={styles.label}>
+                  {field === "plate"
+                    ? "License Plate (Optional)"
+                    : field.charAt(0).toUpperCase() + field.slice(1)}
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder={
+                    field === "make"
+                      ? "e.g. Toyota"
+                      : field === "model"
+                      ? "e.g. Camry"
+                      : field === "year"
+                      ? "e.g. 2021"
+                      : field === "color"
+                      ? "e.g. Midnight Blue"
+                      : "e.g. ABC-1234"
+                  }
+                  placeholderTextColor="#aaa"
+                  keyboardType={field === "year" ? "numeric" : "default"}
+                  value={form[field]}
+                  onChangeText={(val) => handleChange(field, val)}
+                />
+              </View>
+            )
+          )}
         </ScrollView>
 
-        {/* Footer */}
         <View style={styles.footer}>
           <Pressable
             style={[styles.button, { opacity: isComplete ? 1 : 0.5 }]}
@@ -152,14 +167,8 @@ export default function GarageSetupScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#000",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-  },
+  safeArea: { flex: 1, backgroundColor: "#000" },
+  container: { flex: 1, backgroundColor: "#000" },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -168,14 +177,8 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "ios" ? 60 : 40,
     marginBottom: 24,
   },
-  headerTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#fff",
-  },
-  form: {
-    paddingHorizontal: 24,
-  },
+  headerTitle: { fontSize: 16, fontWeight: "500", color: "#fff" },
+  form: { paddingHorizontal: 24 },
   title: {
     fontSize: 24,
     fontFamily: "Raleway",
@@ -219,30 +222,11 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     overflow: "hidden",
   },
-  imagePlaceholder: {
-    alignItems: "center",
-  },
-  imageLabel: {
-    color: "#ccc",
-    fontSize: 12,
-    marginTop: 4,
-  },
-  imageNote: {
-    fontSize: 10,
-    color: "#888",
-    marginTop: 2,
-  },
-  imageAction: {
-    marginTop: 6,
-    fontSize: 12,
-    color: "#ccc",
-    fontWeight: "500",
-  },
-  imagePreview: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
+  imagePlaceholder: { alignItems: "center" },
+  imageLabel: { color: "#ccc", fontSize: 12, marginTop: 4 },
+  imageNote: { fontSize: 10, color: "#888", marginTop: 2 },
+  imageAction: { marginTop: 6, fontSize: 12, color: "#ccc", fontWeight: "500" },
+  imagePreview: { width: "100%", height: "100%", resizeMode: "cover" },
   footer: {
     paddingHorizontal: 24,
     paddingTop: 8,
@@ -254,8 +238,5 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignItems: "center",
   },
-  buttonText: {
-    color: "#000",
-    fontWeight: "600",
-  },
+  buttonText: { color: "#000", fontWeight: "600" },
 });

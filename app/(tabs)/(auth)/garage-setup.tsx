@@ -1,18 +1,20 @@
-import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
+  ActionSheetIOS,
   ActivityIndicator,
   Image,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,7 +29,7 @@ export default function GarageSetupScreen() {
   });
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const { showActionSheetWithOptions } = useActionSheet();
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (field: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -36,20 +38,20 @@ export default function GarageSetupScreen() {
   const isComplete = form.make && form.model && form.year && form.color;
 
   const handleImageAction = () => {
-    showActionSheetWithOptions(
-      {
-        title: "Upload Photo",
-        options: ["Take photo", "Select photo", "Cancel"],
-        cancelButtonIndex: 2,
-      },
-      async (selectedIndex) => {
-        if (selectedIndex === 0) {
-          await handleTakePhoto();
-        } else if (selectedIndex === 1) {
-          await handleSelectPhoto();
+    if (Platform.OS === "ios") {
+      ActionSheetIOS.showActionSheetWithOptions(
+        {
+          options: ["Take photo", "Select photo", "Cancel"],
+          cancelButtonIndex: 2,
+        },
+        async (selectedIndex) => {
+          if (selectedIndex === 0) await handleTakePhoto();
+          else if (selectedIndex === 1) await handleSelectPhoto();
         }
-      }
-    );
+      );
+    } else {
+      setShowModal(true);
+    }
   };
 
   const handleTakePhoto = async () => {
@@ -61,11 +63,9 @@ export default function GarageSetupScreen() {
       allowsEditing: true,
       quality: 0.7,
     });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+    if (!result.canceled) setImage(result.assets[0].uri);
     setLoading(false);
+    setShowModal(false);
   };
 
   const handleSelectPhoto = async () => {
@@ -77,11 +77,9 @@ export default function GarageSetupScreen() {
       allowsEditing: true,
       quality: 0.7,
     });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+    if (!result.canceled) setImage(result.assets[0].uri);
     setLoading(false);
+    setShowModal(false);
   };
 
   return (
@@ -90,6 +88,7 @@ export default function GarageSetupScreen() {
         style={styles.container}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
+        {/* Header */}
         <View style={styles.header}>
           <Pressable onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={24} color="#fff" />
@@ -97,6 +96,7 @@ export default function GarageSetupScreen() {
           <Text style={styles.headerTitle}>Garage Setup</Text>
         </View>
 
+        {/* Form */}
         <ScrollView contentContainerStyle={styles.form}>
           <Text style={styles.title}>Next, Let’s Add Your Vehicle</Text>
           <Text style={styles.subtitle}>
@@ -152,6 +152,7 @@ export default function GarageSetupScreen() {
           )}
         </ScrollView>
 
+        {/* Button */}
         <View style={styles.footer}>
           <Pressable
             style={[styles.button, { opacity: isComplete ? 1 : 0.5 }]}
@@ -161,6 +162,42 @@ export default function GarageSetupScreen() {
             <Text style={styles.buttonText}>Add Vehicle</Text>
           </Pressable>
         </View>
+
+        {/* Android/Web Modal */}
+        {/* Android/Web Modal */}
+        <Modal
+          visible={showModal}
+          animationType="fade"
+          transparent
+          onRequestClose={() => setShowModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalWrapper}>
+              <View style={styles.modalOptionsGroup}>
+                <TouchableOpacity
+                  style={[styles.modalOption, styles.modalTopRadius]}
+                  onPress={handleTakePhoto}
+                >
+                  <Text style={styles.modalText}>Take photo</Text>
+                </TouchableOpacity>
+                <View style={styles.modalDivider} />
+                <TouchableOpacity
+                  style={[styles.modalOption, styles.modalBottomRadius]}
+                  onPress={handleSelectPhoto}
+                >
+                  <Text style={styles.modalText}>Select photo</Text>
+                </TouchableOpacity>
+              </View>
+
+              <TouchableOpacity
+                style={styles.modalCancel}
+                onPress={() => setShowModal(false)}
+              >
+                <Text style={[styles.modalText]}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -239,4 +276,55 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: { color: "#000", fontWeight: "600" },
+
+  // Modal styles for Android/Web
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+    backgroundColor: "rgba(0,0,0,0.4)",
+    paddingHorizontal: 8,
+    paddingBottom: 16,
+  },
+  modalWrapper: {
+    width: "100%",
+  },
+  modalOptionsGroup: {
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    overflow: "hidden",
+  },
+  modalOption: {
+    paddingVertical: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  modalTopRadius: {
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+  },
+  modalBottomRadius: {
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+  },
+  modalDivider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: "#ccc",
+  },
+  modalCancel: {
+    marginTop: 8,
+    paddingVertical: 14,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalText: {
+    fontSize: 20,
+    fontWeight: "400",
+    fontFamily: "Inter",
+    color: "#007AFF",
+    letterSpacing: -0.4,
+    textAlign: "center",
+  },
 });

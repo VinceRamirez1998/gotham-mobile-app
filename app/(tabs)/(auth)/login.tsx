@@ -1,22 +1,23 @@
+import { router } from "expo-router";
 import {
-  View,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
   Text,
   TextInput,
-  Pressable,
-  StyleSheet,
-  ImageBackground,
-  Platform,
-  ScrollView,
-  KeyboardAvoidingView,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
 
 export default function LoginScreen() {
   return (
     <ImageBackground
       source={require("@/assets/images/background-car.png")}
       style={styles.background}
+      resizeMode="cover"
     >
       <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
         <KeyboardAvoidingView
@@ -29,28 +30,30 @@ export default function LoginScreen() {
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.title}>Welcome To Gotham Auto</Text>
-            <Text style={styles.subtitle}>
-              Start by entering your email or phone number to log in.
-            </Text>
+            <View style={styles.form}>
+              <Text style={styles.title}>Welcome To Gotham Auto</Text>
+              <Text style={styles.subtitle}>
+                Start by entering your email or phone number to log in.
+              </Text>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your email or phone number"
-              placeholderTextColor="#aaa"
-            />
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your email or phone number"
+                placeholderTextColor="#aaa"
+              />
 
-            <Pressable
-              style={styles.button}
-              onPress={() => router.push("/verification")}
-            >
-              <Text style={styles.buttonText}>Login</Text>
-            </Pressable>
+              <Pressable
+                style={styles.button}
+                onPress={() => router.push("/verification")}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </Pressable>
 
-            <Text style={styles.footer}>
-              We’ll send you a one-time code to verify your identity.{"\n"}No
-              password needed.
-            </Text>
+              <Text style={styles.footer}>
+                We’ll send you a one-time code to verify your identity.{"\n"}No
+                password needed.
+              </Text>
+            </View>
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -61,11 +64,18 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: "cover",
+    width: "100%",
+    height: "100%",
   },
 
   safeArea: {
     flex: 1,
+  },
+
+  form: {
+    width: "100%",
+    maxWidth: 400,
+    alignSelf: "center",
   },
 
   overlay: {
@@ -82,7 +92,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "600",
-    fontFamily: "Raleway", // Ensure this font is loaded
+    fontFamily: "Raleway",
     color: "#ffffff",
     textAlign: "center",
     marginBottom: 8,
@@ -90,7 +100,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     fontWeight: "300",
-    fontFamily: "Inter", // Ensure this font is loaded
+    fontFamily: "Inter",
     color: "#cccccc",
     textAlign: "center",
     marginBottom: 16,

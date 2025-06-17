@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import {
+  Image,
   ImageBackground,
   Platform,
   Pressable,
@@ -13,7 +14,7 @@ import {
 export default function LoginScreen() {
   return (
     <ImageBackground
-      source={require("@/assets/images/background-car.png")}
+      source={require("@/assets/images/login.png")}
       style={styles.background}
       resizeMode="cover"
     >
@@ -23,11 +24,11 @@ export default function LoginScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.logoContainer}>
-          {/* <Image
+          <Image
             source={require("@/assets/images/gothamlogo.png")}
             style={styles.logo}
             resizeMode="contain"
-          /> */}
+          />
         </View>
 
         <View style={styles.form}>

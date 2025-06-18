@@ -59,12 +59,26 @@ export default function Garage() {
 
         {/* Add Vehicle Link */}
         <Pressable style={styles.addVehicle}>
-          <Text style={styles.addVehicleText}>Add Vehicle</Text>
+          <View style={styles.addVehicleContent}>
+            <Text style={styles.addVehicleText}>Add Vehicle</Text>
+            <Image
+              source={require("@/assets/icons/add-icon.png")}
+              style={styles.addVehicleIcon}
+              resizeMode="contain"
+            />
+          </View>
         </Pressable>
 
         {/* Services Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Our services</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Our services</Text>
+            <Image
+              source={require("@/assets/icons/arrow-right.png")}
+              style={styles.sectionArrow}
+            />
+          </View>
+
           <View style={styles.serviceRow}>
             <Image
               source={require("@/assets/images/background-car.png")}
@@ -117,6 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 26,
   },
   logo: {
     height: 24,
@@ -136,7 +151,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // 🚗 VEHICLE CARD STYLES
+  //  VEHICLE CARD STYLES
   vehicleCard: {
     backgroundColor: "#111",
     borderRadius: 8,
@@ -201,10 +216,22 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     marginBottom: 16,
   },
+
+  addVehicleContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+
   addVehicleText: {
     color: "#fff",
     fontSize: 14,
-    textDecorationLine: "underline",
+  },
+
+  addVehicleIcon: {
+    width: 24,
+    height: 24,
+    tintColor: "#fff",
   },
 
   cardTopRow: {
@@ -213,15 +240,26 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
-  // 🔧 SERVICES
+  //  SERVICES
   section: {
     marginBottom: 24,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
   },
   sectionTitle: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "500",
     marginBottom: 12,
+  },
+  sectionArrow: {
+    width: 22,
+    height: 22,
+    tintColor: "#fff",
   },
   serviceRow: {
     flexDirection: "row",
@@ -233,14 +271,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
-  // 📍 CONTACT INFO
+  //  CONTACT INFO
   contactText: {
     color: "#ccc",
     fontSize: 12,
     marginBottom: 4,
   },
 
-  // 📸 FOOTER IMAGE
+  //  FOOTER IMAGE
   footerImage: {
     width: "100%",
     height: 140,

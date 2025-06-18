@@ -15,7 +15,7 @@ export default function Garage() {
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <ScrollView>
-        {/* ⬇️ Wrapped all padded content inside a View */}
+        {/*  Wrapped all padded content inside a View */}
         <View style={styles.container}>
           {/* Header row */}
           <GarageHeader />
@@ -36,7 +36,7 @@ export default function Garage() {
               style={styles.arrowIcon}
             />
             <Image
-              source={require("@/assets/images/background-car.png")}
+              source={require("@/assets/images/user-img-default.png")}
               style={styles.vehicleThumb}
             />
             <Text style={styles.vehicleTitle}>Mclaren 720S</Text>

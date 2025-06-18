@@ -35,16 +35,25 @@ export default function Garage() {
 
         {/* Garage Vehicle Card */}
         <View style={styles.vehicleCard}>
+          {/* Top-right icon */}
+          <Image
+            source={require("@/assets/icons/arrow-up-right.png")}
+            style={styles.arrowIcon}
+          />
+
+          {/* Circular vehicle image */}
           <Image
             source={require("@/assets/images/background-car.png")}
             style={styles.vehicleThumb}
           />
-          <View style={{ flex: 1 }}>
-            <Text style={styles.vehicleTitle}>Mclaren 720S</Text>
-            <Text style={styles.noService}>No Service Yet</Text>
-          </View>
-          <Pressable style={styles.serviceBtn}>
-            <Text style={styles.serviceBtnText}>Book a Service</Text>
+
+          {/* Vehicle name and service text under image */}
+          <Text style={styles.vehicleTitle}>Mclaren 720S</Text>
+          <Text style={styles.vehicleSubtext}>No Service Yet</Text>
+
+          {/* Book a Service button */}
+          <Pressable style={styles.bookFullButton}>
+            <Text style={styles.bookFullButtonText}>Book a Service</Text>
           </Pressable>
         </View>
 
@@ -96,7 +105,10 @@ export default function Garage() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#000" },
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
   container: {
     padding: 24,
     backgroundColor: "#000",
@@ -123,41 +135,66 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
   },
+
+  // 🚗 VEHICLE CARD STYLES
   vehicleCard: {
     backgroundColor: "#111",
     borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    position: "relative",
+  },
+
+  arrowIcon: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    height: 24,
+    width: 24,
+  },
+
+  vehicleContentRow: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
     marginBottom: 12,
   },
+
   vehicleThumb: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 28,
     marginRight: 12,
+    marginBottom: 32,
   },
+
   vehicleTitle: {
     fontSize: 16,
     fontWeight: "600",
     color: "#fff",
+    marginBottom: 2,
   },
-  noService: {
+
+  vehicleSubtext: {
     fontSize: 12,
-    color: "#888",
+    color: "#aaa",
+    marginBottom: 16,
   },
-  serviceBtn: {
-    marginLeft: "auto",
+
+  bookFullButton: {
     backgroundColor: "#f2f2f2",
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 4,
+    alignItems: "center",
+    alignSelf: "stretch",
   },
-  serviceBtnText: {
-    fontSize: 12,
+
+  bookFullButtonText: {
+    fontSize: 14,
     fontWeight: "500",
     color: "#000",
   },
+
   addVehicle: {
     alignSelf: "flex-end",
     marginBottom: 16,
@@ -167,6 +204,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textDecorationLine: "underline",
   },
+
+  cardTopRow: {
+    width: "100%",
+    alignItems: "flex-end",
+    marginBottom: 8,
+  },
+
+  // 🔧 SERVICES
   section: {
     marginBottom: 24,
   },
@@ -185,11 +230,15 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 8,
   },
+
+  // 📍 CONTACT INFO
   contactText: {
     color: "#ccc",
     fontSize: 12,
     marginBottom: 4,
   },
+
+  // 📸 FOOTER IMAGE
   footerImage: {
     width: "100%",
     height: 140,

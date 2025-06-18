@@ -28,7 +28,7 @@ export default function Garage() {
 
         {/* Promo Card */}
         <Image
-          source={require("@/assets/images/background-car.png")}
+          source={require("@/assets/images/promotional-banner.png")}
           style={styles.promo}
           resizeMode="cover"
         />

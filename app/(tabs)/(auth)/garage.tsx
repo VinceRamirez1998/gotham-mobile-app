@@ -110,35 +110,33 @@ export default function Garage() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Reach Out Anytime</Text>
 
-          <View style={styles.contactRow}>
-            <Text style={styles.contactLabel}>Address</Text>
-            <Text style={styles.contactValue}>
-              9 South Street Danbury CT 06810
-            </Text>
-          </View>
+          <View style={styles.contactGrid}>
+            <View style={styles.contactLabels}>
+              <Text style={styles.contactLabel}>Address</Text>
+              <Text style={styles.contactLabel}>Phone</Text>
+              <Text style={styles.contactLabel}>Email</Text>
+              <Text style={styles.contactLabel}>Business Hours</Text>
+            </View>
 
-          <View style={styles.contactRow}>
-            <Text style={styles.contactLabel}>Phone</Text>
-            <Text style={styles.contactValue}>
-              203.885.0107 or 203.648.0116
-            </Text>
-          </View>
-
-          <View style={styles.contactRow}>
-            <Text style={styles.contactLabel}>Email</Text>
-            <Text style={styles.contactValue}>gothamautoworks@gmail.com</Text>
-          </View>
-
-          <View style={styles.contactRow}>
-            <Text style={styles.contactLabel}>Business Hours</Text>
-            <View style={styles.contactValue}>
-              <Text style={styles.contactText}>
-                Mon – Fri: 8:00 am – 6:00 pm
+            <View style={styles.contactValues}>
+              <Text style={styles.contactValue}>
+                9 South Street Danbury CT 06810
               </Text>
-              <Text style={styles.contactText}>
-                Saturday: 8:00 am – 3:00 pm
+              <Text style={styles.contactValue}>
+                203.885.0107 or 203.648.0116
               </Text>
-              <Text style={styles.contactText}>Sunday: Appointment only</Text>
+              <Text style={styles.contactValue}>gothamautoworks@gmail.com</Text>
+              <View>
+                <Text style={styles.contactValue}>
+                  Mon – Fri: 8:00 am – 6:00 pm
+                </Text>
+                <Text style={styles.contactValue}>
+                  Saturday: 8:00 am – 3:00 pm
+                </Text>
+                <Text style={styles.contactValue}>
+                  Sunday: Appointment only
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -327,25 +325,32 @@ const styles = StyleSheet.create({
   },
 
   //  CONTACT INFO
-  contactRow: {
+  contactGrid: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 8,
+    gap: 42,
+    marginTop: 12,
+  },
+
+  contactLabels: {
+    minWidth: 100,
   },
 
   contactLabel: {
     color: "#fff",
-    fontSize: 13,
-    fontWeight: "500",
-    paddingRight: 12, // adds space between columns
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+
+  contactValues: {
+    flex: 1,
   },
 
   contactValue: {
     color: "#ccc",
-    fontSize: 13,
-    flexShrink: 1,
-    textAlign: "right",
+    fontSize: 14,
+    marginBottom: 8,
+    textAlign: "left", // important!
   },
 
   contactText: {

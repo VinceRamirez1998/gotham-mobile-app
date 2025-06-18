@@ -71,7 +71,7 @@ export default function Garage() {
             <View style={styles.serviceRow}>
               <View style={styles.serviceCard}>
                 <Image
-                  source={require("@/assets/images/background-car.png")}
+                  source={require("@/assets/images/window-tinting.png")}
                   style={styles.serviceImage}
                 />
                 <Text style={styles.serviceTitle}>Window Tinting</Text>
@@ -83,7 +83,7 @@ export default function Garage() {
 
               <View style={styles.serviceCard}>
                 <Image
-                  source={require("@/assets/images/background-car.png")}
+                  source={require("@/assets/images/ceramic-coating.png")}
                   style={styles.serviceImage}
                 />
                 <Text style={styles.serviceTitle}>Ceramic Coating</Text>

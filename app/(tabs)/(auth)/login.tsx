@@ -2,6 +2,7 @@ import { router } from "expo-router";
 import {
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
   Platform,
   Pressable,
   ScrollView,
@@ -10,6 +11,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function LoginScreen() {
   return (
@@ -18,86 +20,87 @@ export default function LoginScreen() {
       style={styles.background}
       resizeMode="cover"
     >
-      <ScrollView
-        contentContainerStyle={styles.loginBox}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.logoContainer}>
-          <Image
-            source={require("@/assets/images/gothamlogo.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
+      <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+        >
+          <View style={styles.logoWrapper}>
+            <Image
+              source={require("@/assets/images/gothamlogo.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
 
-        <View style={styles.form}>
-          <Text style={styles.title}>Welcome To Gotham Auto</Text>
-          <Text style={styles.subtitle}>
-            Start by entering your email or phone number to log in.
-          </Text>
-
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your email or phone number"
-            placeholderTextColor="#aaa"
-          />
-
-          <Pressable
-            style={styles.button}
-            onPress={() => router.push("/verification")}
+          <ScrollView
+            contentContainerStyle={styles.scrollForm}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
           >
-            <Text style={styles.buttonText}>Login</Text>
-          </Pressable>
+            <View style={styles.form}>
+              <Text style={styles.title}>Welcome To Gotham Auto</Text>
+              <Text style={styles.subtitle}>
+                Start by entering your email or phone number to log in.
+              </Text>
 
-          <Text style={styles.footer}>
-            We’ll send you a one-time code to verify your identity.{"\n"}No
-            password needed.
-          </Text>
-        </View>
-      </ScrollView>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter your email or phone number"
+                placeholderTextColor="#aaa"
+              />
+
+              <Pressable
+                style={styles.button}
+                onPress={() => router.push("/verification")}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </Pressable>
+
+              <Text style={styles.footer}>
+                We’ll send you a one-time code to verify your identity.{"\n"}
+                No password needed.
+              </Text>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   background: {
     flex: 1,
     width: "100%",
     height: "100%",
   },
-
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 32,
-    marginTop: 40, // Adjust as needed
-  },
-
-  logo: {
-    width: 180,
-    height: 40,
-  },
-
   safeArea: {
     flex: 1,
   },
-
+  logoWrapper: {
+    alignItems: "center",
+    marginTop: Platform.OS === "ios" ? 120 : 100,
+    marginBottom: 26,
+  },
+  logo: {
+    width: 226,
+    height: 45,
+  },
+  scrollForm: {
+    paddingHorizontal: 24,
+    flexGrow: 1,
+    justifyContent: "flex-end", // this pushes form downward
+    paddingBottom: Platform.OS === "ios" ? 48 : 32,
+  },
   form: {
     width: "100%",
     maxWidth: 400,
     alignSelf: "center",
-  },
-
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    justifyContent: "flex-end",
-  },
-  loginBox: {
-    flexGrow: 1,
-    justifyContent: "flex-end",
-    paddingHorizontal: 24,
-    paddingBottom: Platform.OS === "ios" ? 48 : 32,
   },
   title: {
     fontSize: 24,
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 14,
     fontWeight: "400",
-    fontFamily: "Open Sans", // Ensure this font is loaded
+    fontFamily: "Open Sans",
     color: "#ffffff",
     lineHeight: 22.4,
     marginBottom: 42,

@@ -1,3 +1,5 @@
+import ContactSection from "@/components/ContactSection";
+import Footer from "@/components/Footer";
 import { Ionicons } from "@expo/vector-icons";
 import {
   Image,
@@ -101,46 +103,11 @@ export default function Garage() {
           </View>
 
           {/* Contact Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Reach Out Anytime</Text>
-            <View style={styles.contactGrid}>
-              <View style={styles.contactLabels}>
-                <Text style={styles.contactLabel}>Address</Text>
-                <Text style={styles.contactLabel}>Phone</Text>
-                <Text style={styles.contactLabel}>Email</Text>
-                <Text style={styles.contactLabel}>Business Hours</Text>
-              </View>
-              <View style={styles.contactValues}>
-                <Text style={styles.contactValue}>
-                  9 South Street Danbury CT 06810
-                </Text>
-                <Text style={styles.contactValue}>
-                  203.885.0107 or 203.648.0116
-                </Text>
-                <Text style={styles.contactValue}>
-                  gothamautoworks@gmail.com
-                </Text>
-                <View>
-                  <Text style={styles.contactValue}>
-                    Mon – Fri: 8:00 am – 6:00 pm
-                  </Text>
-                  <Text style={styles.contactValue}>
-                    Saturday: 8:00 am – 3:00 pm
-                  </Text>
-                  <Text style={styles.contactValue}>
-                    Sunday: Appointment only
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
+          <ContactSection />
         </View>
 
-        {/* ✅ Footer image moved OUTSIDE padded container to go full-width */}
-        <Image
-          source={require("@/assets/images/background-car.png")}
-          style={styles.footerImageFull}
-        />
+        {/* Footer  */}
+        <Footer />
       </ScrollView>
     </SafeAreaView>
   );
@@ -245,7 +212,12 @@ const styles = StyleSheet.create({
     height: 24,
     tintColor: "#fff",
   },
-
+  sectionTitle: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 12,
+  },
   section: {
     marginBottom: 24,
   },
@@ -255,11 +227,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
-  sectionTitle: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "500",
-  },
+
   sectionArrow: {
     width: 22,
     height: 22,
@@ -289,37 +257,5 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: "#ccc",
     lineHeight: 14,
-  },
-
-  contactGrid: {
-    flexDirection: "row",
-    gap: 42,
-    marginTop: 12,
-  },
-  contactLabels: {
-    minWidth: 100,
-  },
-  contactLabel: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  contactValues: {
-    flex: 1,
-  },
-  contactValue: {
-    color: "#ccc",
-    fontSize: 14,
-    marginBottom: 8,
-    textAlign: "left",
-  },
-
-  // ✅ NEW FULL-WIDTH FOOTER IMAGE STYLE
-  footerImageFull: {
-    width: "100%",
-    height: 264,
-    marginTop: 0,
-    borderRadius: 0, // remove rounded edges for full bleed
   },
 });

@@ -1,6 +1,6 @@
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import { Ionicons } from "@expo/vector-icons";
+import GarageHeader from "@/components/GarageHeader";
 import {
   Image,
   Pressable,
@@ -18,14 +18,7 @@ export default function Garage() {
         {/* ⬇️ Wrapped all padded content inside a View */}
         <View style={styles.container}>
           {/* Header row */}
-          <View style={styles.topRow}>
-            <Image
-              source={require("@/assets/images/gothamlogo.png")}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-            <Ionicons name="person-circle" size={28} color="#fff" />
-          </View>
+          <GarageHeader />
 
           <Text style={styles.welcome}>Welcome back, John!</Text>
 

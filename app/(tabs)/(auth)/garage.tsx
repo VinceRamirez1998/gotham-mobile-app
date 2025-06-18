@@ -80,32 +80,67 @@ export default function Garage() {
           </View>
 
           <View style={styles.serviceRow}>
-            <Image
-              source={require("@/assets/images/background-car.png")}
-              style={styles.serviceCard}
-            />
-            <Image
-              source={require("@/assets/images/background-car.png")}
-              style={styles.serviceCard}
-            />
+            <View style={styles.serviceCard}>
+              <Image
+                source={require("@/assets/images/background-car.png")}
+                style={styles.serviceImage}
+              />
+              <Text style={styles.serviceTitle}>Window Tinting</Text>
+              <Text style={styles.serviceDescription}>
+                Protect your interior and upgrade your ride with premium
+                tinting.
+              </Text>
+            </View>
+
+            <View style={styles.serviceCard}>
+              <Image
+                source={require("@/assets/images/background-car.png")}
+                style={styles.serviceImage}
+              />
+              <Text style={styles.serviceTitle}>Ceramic Coating</Text>
+              <Text style={styles.serviceDescription}>
+                Elevate your vehicle’s finish with cutting-edge ceramic coating
+                solution.
+              </Text>
+            </View>
           </View>
         </View>
 
         {/* Contact Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Reach Out Anytime</Text>
-          <Text style={styles.contactText}>
-            Address: 9 South Street Danbury CT 06810
-          </Text>
-          <Text style={styles.contactText}>
-            Phone: 203.885.0107 or 203.648.0116
-          </Text>
-          <Text style={styles.contactText}>
-            Email: gothamautoworks@gmail.com
-          </Text>
-          <Text style={styles.contactText}>Mon - Fri: 8:00 am – 6:00 pm</Text>
-          <Text style={styles.contactText}>Saturday: 8:00 am – 3:00 pm</Text>
-          <Text style={styles.contactText}>Sunday: Appointment only</Text>
+
+          <View style={styles.contactRow}>
+            <Text style={styles.contactLabel}>Address</Text>
+            <Text style={styles.contactValue}>
+              9 South Street Danbury CT 06810
+            </Text>
+          </View>
+
+          <View style={styles.contactRow}>
+            <Text style={styles.contactLabel}>Phone</Text>
+            <Text style={styles.contactValue}>
+              203.885.0107 or 203.648.0116
+            </Text>
+          </View>
+
+          <View style={styles.contactRow}>
+            <Text style={styles.contactLabel}>Email</Text>
+            <Text style={styles.contactValue}>gothamautoworks@gmail.com</Text>
+          </View>
+
+          <View style={styles.contactRow}>
+            <Text style={styles.contactLabel}>Business Hours</Text>
+            <View style={styles.contactValue}>
+              <Text style={styles.contactText}>
+                Mon – Fri: 8:00 am – 6:00 pm
+              </Text>
+              <Text style={styles.contactText}>
+                Saturday: 8:00 am – 3:00 pm
+              </Text>
+              <Text style={styles.contactText}>Sunday: Appointment only</Text>
+            </View>
+          </View>
         </View>
 
         {/* Footer Image */}
@@ -124,7 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
   },
   container: {
-    padding: 24,
+    padding: 15,
     backgroundColor: "#000",
   },
   topRow: {
@@ -264,18 +299,59 @@ const styles = StyleSheet.create({
   serviceRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    gap: 12,
   },
+
   serviceCard: {
     width: "48%",
+  },
+
+  serviceImage: {
+    width: "100%",
     height: 100,
     borderRadius: 8,
+    marginBottom: 8,
+  },
+
+  serviceTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 4,
+  },
+
+  serviceDescription: {
+    fontSize: 10,
+    color: "#ccc",
+    lineHeight: 14,
   },
 
   //  CONTACT INFO
+  contactRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 8,
+  },
+
+  contactLabel: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "500",
+    paddingRight: 12, // adds space between columns
+  },
+
+  contactValue: {
+    color: "#ccc",
+    fontSize: 13,
+    flexShrink: 1,
+    textAlign: "right",
+  },
+
   contactText: {
     color: "#ccc",
-    fontSize: 12,
-    marginBottom: 4,
+    fontSize: 13,
+    lineHeight: 20,
   },
 
   //  FOOTER IMAGE

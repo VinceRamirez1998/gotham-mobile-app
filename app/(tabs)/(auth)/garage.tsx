@@ -143,6 +143,8 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
     position: "relative",
+    borderWidth: 1,
+    borderColor: "#2a2a2a",
   },
 
   arrowIcon: {

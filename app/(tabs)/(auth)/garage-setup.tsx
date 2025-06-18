@@ -125,7 +125,9 @@ export default function GarageSetupScreen() {
             (field) => (
               <View key={field}>
                 <Text style={styles.label}>
-                  {field === "plate"
+                  {field === "make"
+                    ? "Vehicle Make"
+                    : field === "plate"
                     ? "License Plate (Optional)"
                     : field.charAt(0).toUpperCase() + field.slice(1)}
                 </Text>

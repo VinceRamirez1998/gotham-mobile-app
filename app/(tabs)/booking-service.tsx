@@ -125,36 +125,54 @@ export default function BookServiceScreen() {
               </View>
             </Pressable>
 
-            <Modal
-              transparent
-              visible={showDateModal}
-              animationType="slide"
-              onRequestClose={() => setShowDateModal(false)}
-            >
-              <View style={styles.modalOverlay}>
-                <View style={styles.modalContainer}>
-                  <View style={styles.handleBar} />
-                  <Text style={styles.modalTitle}>Select A Date</Text>
-                  <DateTimePicker
-                    value={date || new Date()}
-                    mode="date"
-                    display="spinner"
-                    textColor="#fff"
-                    style={styles.datePicker}
-                    onChange={(event, selectedDate) => {
-                      if (event.type === "dismissed") return;
-                      if (selectedDate) setDate(selectedDate);
-                    }}
-                  />
-                  <Pressable
-                    style={styles.modalButton}
-                    onPress={() => setShowDateModal(false)}
-                  >
-                    <Text style={styles.modalButtonText}>Select Date</Text>
-                  </Pressable>
+            {/* iOS modal date picker */}
+            {Platform.OS === "ios" && (
+              <Modal
+                transparent
+                visible={showDateModal}
+                animationType="slide"
+                onRequestClose={() => setShowDateModal(false)}
+              >
+                <View style={styles.modalOverlay}>
+                  <View style={styles.modalContainer}>
+                    <View style={styles.handleBar} />
+                    <Text style={styles.modalTitle}>Select A Date</Text>
+                    <DateTimePicker
+                      value={date || new Date()}
+                      mode="date"
+                      display="spinner"
+                      textColor="#fff"
+                      style={styles.datePicker}
+                      onChange={(event, selectedDate) => {
+                        if (event.type === "dismissed") return;
+                        if (selectedDate) setDate(selectedDate);
+                      }}
+                    />
+                    <Pressable
+                      style={styles.modalButton}
+                      onPress={() => setShowDateModal(false)}
+                    >
+                      <Text style={styles.modalButtonText}>Select Date</Text>
+                    </Pressable>
+                  </View>
                 </View>
-              </View>
-            </Modal>
+              </Modal>
+            )}
+
+            {/* Android native date picker */}
+            {Platform.OS === "android" && showDateModal && (
+              <DateTimePicker
+                value={date || new Date()}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setShowDateModal(false);
+                  if (event.type !== "dismissed" && selectedDate) {
+                    setDate(selectedDate);
+                  }
+                }}
+              />
+            )}
 
             <Text style={styles.label}>Time</Text>
             <View style={styles.timeGrid}>
@@ -268,7 +286,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   timeSlotActive: { borderColor: "#fff" },
-  timeText: { color: "#fff", fontSize: 14 },
   notesInput: {
     backgroundColor: "#111",
     color: "#fff",
@@ -286,7 +303,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignItems: "center",
   },
-  bookButtonText: { color: "#000", fontWeight: "600" },
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",

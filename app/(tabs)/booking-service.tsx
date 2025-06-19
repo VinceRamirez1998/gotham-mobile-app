@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -36,6 +36,8 @@ export default function BookServiceScreen() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [note, setNote] = useState<string>("");
 
+  const scrollRef = useRef<ScrollView>(null);
+
   const timeSlots = [
     "09:00 am",
     "10:00 am",
@@ -48,149 +50,143 @@ export default function BookServiceScreen() {
     "05:00 pm",
   ];
 
-  const renderFormContent = () => (
-    <>
-      <View style={styles.header}>
-        <Pressable onPress={() => router.push("/garage")}>
-          <Ionicons name="chevron-back" size={24} color="#fff" />
-        </Pressable>
-        <Text style={styles.headerTitle}>Book A Service</Text>
-      </View>
-
-      <Text style={styles.title}>
-        Book A Service For Your{"\n"}McLaren 720s
-      </Text>
-      <Text style={styles.subtitle}>
-        Choose the service type, date, and time that works best for you.
-      </Text>
-
-      {/* Service Type */}
-      <Text style={styles.label}>Service Type</Text>
-      <View style={{ zIndex: 10 }}>
-        <DropDownPicker
-          open={openService}
-          value={serviceType}
-          items={services}
-          setOpen={setOpenService}
-          setValue={(cb) => setServiceType(cb(serviceType))}
-          setItems={setServices}
-          placeholder="Select a service"
-          style={styles.dropdown}
-          textStyle={{ color: "#fff" }}
-          dropDownContainerStyle={{
-            backgroundColor: "#111",
-            borderColor: "#444",
-          }}
-          ArrowDownIconComponent={({ style }) => (
-            <Ionicons
-              name="chevron-down"
-              size={20}
-              color="#fff"
-              style={style as any}
-            />
-          )}
-        />
-      </View>
-
-      {/* Date */}
-      <Text style={styles.label}>Date</Text>
-      <Pressable style={styles.dropdown} onPress={() => setShowDateModal(true)}>
-        <View style={styles.row}>
-          <Text style={{ color: date ? "#fff" : "#888" }}>
-            {date ? date.toDateString() : "Select a date"}
-          </Text>
-          <Ionicons name="chevron-down" size={20} color="#fff" />
-        </View>
-      </Pressable>
-
-      {/* Date Modal */}
-      <Modal
-        transparent
-        visible={showDateModal}
-        animationType="slide"
-        onRequestClose={() => setShowDateModal(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <View style={styles.handleBar} />
-            <Text style={styles.modalTitle}>Select A Date</Text>
-            <DateTimePicker
-              value={date || new Date()}
-              mode="date"
-              display="spinner"
-              textColor="#fff"
-              style={styles.datePicker}
-              onChange={(event, selectedDate) => {
-                if (event.type !== "dismissed" && selectedDate) {
-                  setDate(selectedDate);
-                }
-              }}
-            />
-            <Pressable
-              style={styles.modalButton}
-              onPress={() => setShowDateModal(false)}
-            >
-              <Text style={styles.modalButtonText}>Select Date</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Time Selection */}
-      <Text style={styles.label}>Time</Text>
-      <View style={styles.timeGrid}>
-        {timeSlots.map((slot) => (
-          <Pressable
-            key={slot}
-            style={[
-              styles.timeSlot,
-              selectedTime === slot && styles.timeSlotActive,
-            ]}
-            onPress={() => setSelectedTime(slot)}
-          >
-            <Text style={styles.timeText}>{slot}</Text>
-          </Pressable>
-        ))}
-      </View>
-
-      {/* Notes */}
-      <Text style={styles.label}>Additional Notes (Optional)</Text>
-      <TextInput
-        style={styles.notesInput}
-        placeholder="e.g. Add any special instructions or requests for the technician"
-        placeholderTextColor="#888"
-        multiline
-        value={note}
-        onChangeText={setNote}
-      />
-
-      {/* Book Button */}
-      <Pressable style={styles.bookButton}>
-        <Text style={styles.bookButtonText}>Book Service</Text>
-      </Pressable>
-    </>
-  );
-
   return (
     <SafeAreaView
       style={styles.safeArea}
-      edges={["bottom", "top", "left", "right"]}
+      edges={["top", "bottom", "left", "right"]}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.flex}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          {openService ? (
-            <View style={styles.container}>{renderFormContent()}</View>
-          ) : (
-            <ScrollView
-              contentContainerStyle={styles.container}
-              keyboardShouldPersistTaps="handled"
+          <ScrollView
+            ref={scrollRef}
+            contentContainerStyle={styles.container}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.header}>
+              <Pressable onPress={() => router.push("/garage")}>
+                <Ionicons name="chevron-back" size={24} color="#fff" />
+              </Pressable>
+              <Text style={styles.headerTitle}>Book A Service</Text>
+            </View>
+
+            <Text style={styles.title}>
+              Book A Service For Your{"\n"}McLaren 720s
+            </Text>
+            <Text style={styles.subtitle}>
+              Choose the service type, date, and time that works best for you.
+            </Text>
+
+            <Text style={styles.label}>Service Type</Text>
+            <View style={{ zIndex: 10 }}>
+              <DropDownPicker
+                open={openService}
+                value={serviceType}
+                items={services}
+                setOpen={setOpenService}
+                setValue={(cb) => setServiceType(cb(serviceType))}
+                setItems={setServices}
+                placeholder="Select a service"
+                style={styles.dropdown}
+                textStyle={{ color: "#fff" }}
+                listMode="SCROLLVIEW"
+                dropDownContainerStyle={{
+                  backgroundColor: "#111",
+                  borderColor: "#444",
+                }}
+                ArrowDownIconComponent={({ style }) => (
+                  <Ionicons
+                    name="chevron-down"
+                    size={20}
+                    color="#fff"
+                    style={style as any}
+                  />
+                )}
+              />
+            </View>
+
+            <Text style={styles.label}>Date</Text>
+            <Pressable
+              style={styles.dropdown}
+              onPress={() => setShowDateModal(true)}
             >
-              {renderFormContent()}
-            </ScrollView>
-          )}
+              <View style={styles.row}>
+                <Text style={{ color: date ? "#fff" : "#888" }}>
+                  {date ? date.toDateString() : "Select a date"}
+                </Text>
+                <Ionicons name="chevron-down" size={20} color="#fff" />
+              </View>
+            </Pressable>
+
+            {/* Date Modal */}
+            <Modal
+              transparent
+              visible={showDateModal}
+              animationType="slide"
+              onRequestClose={() => setShowDateModal(false)}
+            >
+              <View style={styles.modalOverlay}>
+                <View style={styles.modalContainer}>
+                  <View style={styles.handleBar} />
+                  <Text style={styles.modalTitle}>Select A Date</Text>
+                  <DateTimePicker
+                    value={date || new Date()}
+                    mode="date"
+                    display="spinner"
+                    textColor="#fff"
+                    style={styles.datePicker}
+                    onChange={(event, selectedDate) => {
+                      if (event.type === "dismissed") return;
+                      if (selectedDate) setDate(selectedDate);
+                    }}
+                  />
+                  <Pressable
+                    style={styles.modalButton}
+                    onPress={() => setShowDateModal(false)}
+                  >
+                    <Text style={styles.modalButtonText}>Select Date</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </Modal>
+
+            <Text style={styles.label}>Time</Text>
+            <View style={styles.timeGrid}>
+              {timeSlots.map((slot) => (
+                <Pressable
+                  key={slot}
+                  style={[
+                    styles.timeSlot,
+                    selectedTime === slot && styles.timeSlotActive,
+                  ]}
+                  onPress={() => setSelectedTime(slot)}
+                >
+                  <Text style={styles.timeText}>{slot}</Text>
+                </Pressable>
+              ))}
+            </View>
+
+            <Text style={styles.label}>Additional Notes (Optional)</Text>
+            <TextInput
+              style={styles.notesInput}
+              placeholder="e.g. Add any special instructions or requests for the technician"
+              placeholderTextColor="#888"
+              multiline
+              value={note}
+              onChangeText={setNote}
+              onFocus={() => {
+                setTimeout(() => {
+                  scrollRef.current?.scrollToEnd({ animated: true });
+                }, 300);
+              }}
+            />
+
+            <Pressable style={styles.bookButton}>
+              <Text style={styles.bookButtonText}>Book Service</Text>
+            </Pressable>
+          </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>

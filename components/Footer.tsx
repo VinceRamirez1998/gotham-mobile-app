@@ -1,5 +1,5 @@
-// components/Footer.tsx
 import {
+  Dimensions,
   Image,
   ImageBackground,
   Linking,
@@ -7,6 +7,8 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+
+const screenWidth = Dimensions.get("window").width;
 
 export default function Footer() {
   const socials = [
@@ -28,13 +30,16 @@ export default function Footer() {
     <ImageBackground
       source={require("@/assets/images/footer.png")}
       style={styles.footerImage}
+      resizeMode="cover"
     >
-      <View style={styles.socialContainer}>
-        {socials.map((item, index) => (
-          <Pressable key={index} onPress={() => Linking.openURL(item.url)}>
-            <Image source={item.icon} style={styles.icon} />
-          </Pressable>
-        ))}
+      <View style={styles.overlay}>
+        <View style={styles.socialContainer}>
+          {socials.map((item, index) => (
+            <Pressable key={index} onPress={() => Linking.openURL(item.url)}>
+              <Image source={item.icon} style={styles.icon} />
+            </Pressable>
+          ))}
+        </View>
       </View>
     </ImageBackground>
   );
@@ -43,8 +48,11 @@ export default function Footer() {
 const styles = StyleSheet.create({
   footerImage: {
     width: "100%",
-    height: 264,
-    justifyContent: "flex-end", // position icons at the bottom
+    aspectRatio: 375 / 264, // use actual image ratio
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "flex-end",
     padding: 16,
   },
   socialContainer: {
@@ -53,8 +61,8 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   icon: {
-    width: 24,
-    height: 24,
-    tintColor: "#fff", // optional: applies a white overlay
+    width: screenWidth * 0.06, // responsive sizing
+    height: screenWidth * 0.06,
+    tintColor: "#fff",
   },
 });

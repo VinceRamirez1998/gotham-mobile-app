@@ -51,7 +51,7 @@ export default function BookServiceScreen() {
     >
       <View style={styles.container}>
         <View style={styles.header}>
-          <Pressable onPress={() => router.back()}>
+          <Pressable onPress={() => router.push("/garage")}>
             <Ionicons name="chevron-back" size={24} color="#fff" />
           </Pressable>
           <Text style={styles.headerTitle}>Book A Service</Text>

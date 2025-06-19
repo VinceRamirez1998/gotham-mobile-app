@@ -109,8 +109,13 @@ export default function BookServiceScreen() {
 
             <Text style={styles.label}>Date</Text>
             <Pressable
-              style={styles.dropdown}
-              onPress={() => setShowDateModal(true)}
+              style={[
+                styles.dropdown,
+                !serviceType && { backgroundColor: "#222" },
+              ]}
+              onPress={() => {
+                if (serviceType) setShowDateModal(true);
+              }}
             >
               <View style={styles.row}>
                 <Text style={{ color: date ? "#fff" : "#888" }}>
@@ -120,7 +125,6 @@ export default function BookServiceScreen() {
               </View>
             </Pressable>
 
-            {/* Date Modal */}
             <Modal
               transparent
               visible={showDateModal}
@@ -154,18 +158,34 @@ export default function BookServiceScreen() {
 
             <Text style={styles.label}>Time</Text>
             <View style={styles.timeGrid}>
-              {timeSlots.map((slot) => (
-                <Pressable
-                  key={slot}
-                  style={[
-                    styles.timeSlot,
-                    selectedTime === slot && styles.timeSlotActive,
-                  ]}
-                  onPress={() => setSelectedTime(slot)}
-                >
-                  <Text style={styles.timeText}>{slot}</Text>
-                </Pressable>
-              ))}
+              {timeSlots.map((slot) => {
+                const isDisabled = !date;
+                return (
+                  <Pressable
+                    key={slot}
+                    style={[
+                      styles.timeSlot,
+                      selectedTime === slot && styles.timeSlotActive,
+                      isDisabled && {
+                        backgroundColor: "#222",
+                        borderColor: "#333",
+                      },
+                    ]}
+                    onPress={() => {
+                      if (!isDisabled) setSelectedTime(slot);
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: isDisabled ? "#666" : "#fff",
+                        fontSize: 14,
+                      }}
+                    >
+                      {slot}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
 
             <Text style={styles.label}>Additional Notes (Optional)</Text>
@@ -183,7 +203,15 @@ export default function BookServiceScreen() {
               }}
             />
 
-            <Pressable style={styles.bookButton}>
+            <Pressable
+              style={[
+                styles.bookButton,
+                !(serviceType && date && selectedTime) && {
+                  backgroundColor: "#555",
+                },
+              ]}
+              disabled={!(serviceType && date && selectedTime)}
+            >
               <Text style={styles.bookButtonText}>Book Service</Text>
             </Pressable>
           </ScrollView>

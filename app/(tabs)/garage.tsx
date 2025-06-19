@@ -1,6 +1,7 @@
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import GarageHeader from "@/components/GarageHeader";
+import { router } from "expo-router";
 import {
   Image,
   Pressable,
@@ -41,7 +42,10 @@ export default function Garage() {
             />
             <Text style={styles.vehicleTitle}>Mclaren 720S</Text>
             <Text style={styles.vehicleSubtext}>No Service Yet</Text>
-            <Pressable style={styles.bookFullButton}>
+            <Pressable
+              style={styles.bookFullButton}
+              onPress={() => router.push("/booking-service")}
+            >
               <Text style={styles.bookFullButtonText}>Book a Service</Text>
             </Pressable>
           </View>

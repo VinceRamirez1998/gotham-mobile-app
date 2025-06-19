@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   tabIcon: {
     width: 24,
     height: 24,
-    marginBottom: 4,
+    marginBottom: 12,
   },
   tabLabel: {
     fontSize: 12,

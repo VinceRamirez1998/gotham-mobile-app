@@ -4,12 +4,16 @@ import { router } from "expo-router";
 import { useState } from "react";
 import {
   Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -44,138 +48,159 @@ export default function BookServiceScreen() {
     "05:00 pm",
   ];
 
+  const renderFormContent = () => (
+    <>
+      <View style={styles.header}>
+        <Pressable onPress={() => router.push("/garage")}>
+          <Ionicons name="chevron-back" size={24} color="#fff" />
+        </Pressable>
+        <Text style={styles.headerTitle}>Book A Service</Text>
+      </View>
+
+      <Text style={styles.title}>
+        Book A Service For Your{"\n"}McLaren 720s
+      </Text>
+      <Text style={styles.subtitle}>
+        Choose the service type, date, and time that works best for you.
+      </Text>
+
+      {/* Service Type */}
+      <Text style={styles.label}>Service Type</Text>
+      <View style={{ zIndex: 10 }}>
+        <DropDownPicker
+          open={openService}
+          value={serviceType}
+          items={services}
+          setOpen={setOpenService}
+          setValue={(cb) => setServiceType(cb(serviceType))}
+          setItems={setServices}
+          placeholder="Select a service"
+          style={styles.dropdown}
+          textStyle={{ color: "#fff" }}
+          dropDownContainerStyle={{
+            backgroundColor: "#111",
+            borderColor: "#444",
+          }}
+          ArrowDownIconComponent={({ style }) => (
+            <Ionicons
+              name="chevron-down"
+              size={20}
+              color="#fff"
+              style={style as any}
+            />
+          )}
+        />
+      </View>
+
+      {/* Date */}
+      <Text style={styles.label}>Date</Text>
+      <Pressable style={styles.dropdown} onPress={() => setShowDateModal(true)}>
+        <View style={styles.row}>
+          <Text style={{ color: date ? "#fff" : "#888" }}>
+            {date ? date.toDateString() : "Select a date"}
+          </Text>
+          <Ionicons name="chevron-down" size={20} color="#fff" />
+        </View>
+      </Pressable>
+
+      {/* Date Modal */}
+      <Modal
+        transparent
+        visible={showDateModal}
+        animationType="slide"
+        onRequestClose={() => setShowDateModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.handleBar} />
+            <Text style={styles.modalTitle}>Select A Date</Text>
+            <DateTimePicker
+              value={date || new Date()}
+              mode="date"
+              display="spinner"
+              textColor="#fff"
+              style={styles.datePicker}
+              onChange={(event, selectedDate) => {
+                if (event.type !== "dismissed" && selectedDate) {
+                  setDate(selectedDate);
+                }
+              }}
+            />
+            <Pressable
+              style={styles.modalButton}
+              onPress={() => setShowDateModal(false)}
+            >
+              <Text style={styles.modalButtonText}>Select Date</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Time Selection */}
+      <Text style={styles.label}>Time</Text>
+      <View style={styles.timeGrid}>
+        {timeSlots.map((slot) => (
+          <Pressable
+            key={slot}
+            style={[
+              styles.timeSlot,
+              selectedTime === slot && styles.timeSlotActive,
+            ]}
+            onPress={() => setSelectedTime(slot)}
+          >
+            <Text style={styles.timeText}>{slot}</Text>
+          </Pressable>
+        ))}
+      </View>
+
+      {/* Notes */}
+      <Text style={styles.label}>Additional Notes (Optional)</Text>
+      <TextInput
+        style={styles.notesInput}
+        placeholder="e.g. Add any special instructions or requests for the technician"
+        placeholderTextColor="#888"
+        multiline
+        value={note}
+        onChangeText={setNote}
+      />
+
+      {/* Book Button */}
+      <Pressable style={styles.bookButton}>
+        <Text style={styles.bookButtonText}>Book Service</Text>
+      </Pressable>
+    </>
+  );
+
   return (
     <SafeAreaView
       style={styles.safeArea}
       edges={["bottom", "top", "left", "right"]}
     >
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Pressable onPress={() => router.push("/garage")}>
-            <Ionicons name="chevron-back" size={24} color="#fff" />
-          </Pressable>
-          <Text style={styles.headerTitle}>Book A Service</Text>
-        </View>
-
-        <Text style={styles.title}>
-          Book A Service For Your{"\n"}McLaren 720s
-        </Text>
-        <Text style={styles.subtitle}>
-          Choose the service type, date, and time that works best for you.
-        </Text>
-
-        <Text style={styles.label}>Service Type</Text>
-        <View style={{ zIndex: 10 }}>
-          <DropDownPicker
-            open={openService}
-            value={serviceType}
-            items={services}
-            setOpen={setOpenService}
-            setValue={(cb) => setServiceType(cb(serviceType))}
-            setItems={setServices}
-            placeholder="Select a service"
-            style={styles.dropdown}
-            textStyle={{ color: "#fff" }}
-            dropDownContainerStyle={{
-              backgroundColor: "#111",
-              borderColor: "#444",
-            }}
-            ArrowDownIconComponent={({ style }) => (
-              <Ionicons
-                name="chevron-down"
-                size={20}
-                color="#fff"
-                style={style as any}
-              />
-            )}
-          />
-        </View>
-
-        <Text style={styles.label}>Date</Text>
-        <Pressable
-          style={styles.dropdown}
-          onPress={() => setShowDateModal(true)}
-        >
-          <View style={styles.row}>
-            <Text style={{ color: date ? "#fff" : "#888" }}>
-              {date ? date.toDateString() : "Select a date"}
-            </Text>
-            <Ionicons name="chevron-down" size={20} color="#fff" />
-          </View>
-        </Pressable>
-
-        {/* Date Modal */}
-        <Modal
-          transparent
-          visible={showDateModal}
-          animationType="slide"
-          onRequestClose={() => setShowDateModal(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContainer}>
-              <View style={styles.handleBar} />
-              <Text style={styles.modalTitle}>Select A Date</Text>
-              <DateTimePicker
-                value={date || new Date()}
-                mode="date"
-                display="spinner"
-                textColor="#fff"
-                style={styles.datePicker}
-                onChange={(event, selectedDate) => {
-                  if (event.type === "dismissed") return;
-                  if (selectedDate) {
-                    setDate(selectedDate);
-                  }
-                }}
-              />
-
-              <Pressable
-                style={styles.modalButton}
-                onPress={() => setShowDateModal(false)}
-              >
-                <Text style={styles.modalButtonText}>Select Date</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-
-        <Text style={styles.label}>Time</Text>
-        <View style={styles.timeGrid}>
-          {timeSlots.map((slot) => (
-            <Pressable
-              key={slot}
-              style={[
-                styles.timeSlot,
-                selectedTime === slot && styles.timeSlotActive,
-              ]}
-              onPress={() => setSelectedTime(slot)}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.flex}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {openService ? (
+            <View style={styles.container}>{renderFormContent()}</View>
+          ) : (
+            <ScrollView
+              contentContainerStyle={styles.container}
+              keyboardShouldPersistTaps="handled"
             >
-              <Text style={styles.timeText}>{slot}</Text>
-            </Pressable>
-          ))}
-        </View>
-
-        <Text style={styles.label}>Additional Notes (Optional)</Text>
-        <TextInput
-          style={styles.notesInput}
-          placeholder="e.g. Add any special instructions or requests for the technician"
-          placeholderTextColor="#888"
-          multiline
-          value={note}
-          onChangeText={setNote}
-        />
-
-        <Pressable style={styles.bookButton}>
-          <Text style={styles.bookButtonText}>Book Service</Text>
-        </Pressable>
-      </View>
+              {renderFormContent()}
+            </ScrollView>
+          )}
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#000" },
-  container: { flex: 1, paddingHorizontal: 24, paddingBottom: 32 },
+  flex: { flex: 1 },
+  container: { paddingHorizontal: 24, paddingBottom: 32 },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -207,9 +232,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 24,
   },
-
   timeSlot: {
-    width: "30%", // roughly 3 per row with margin
+    width: "30%",
     marginBottom: 12,
     paddingVertical: 10,
     borderRadius: 4,
@@ -218,7 +242,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#111",
     alignItems: "center",
   },
-
   timeSlotActive: { borderColor: "#fff" },
   timeText: { color: "#fff", fontSize: 14 },
   notesInput: {
@@ -239,8 +262,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   bookButtonText: { color: "#000", fontWeight: "600" },
-
-  // Modal Styling
   modalOverlay: {
     flex: 1,
     justifyContent: "flex-end",

@@ -204,6 +204,7 @@ export default function BookServiceScreen() {
             />
 
             <Pressable
+              onPress={() => router.push("/booking-success")}
               style={[
                 styles.bookButton,
                 !(serviceType && date && selectedTime) && {
@@ -212,7 +213,7 @@ export default function BookServiceScreen() {
               ]}
               disabled={!(serviceType && date && selectedTime)}
             >
-              <Text style={styles.bookButtonText}>Book Service</Text>
+              <Text>Book Service</Text>
             </Pressable>
           </ScrollView>
         </TouchableWithoutFeedback>

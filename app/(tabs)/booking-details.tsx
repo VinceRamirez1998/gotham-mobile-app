@@ -16,7 +16,7 @@ export default function BookingDetailsScreen() {
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       {/* Header */}
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()}>
+        <Pressable onPress={() => router.push("/garage")}>
           <Ionicons name="chevron-back" size={24} color="#fff" />
         </Pressable>
         <Text style={styles.headerTitle}>McLaren 720S</Text>
@@ -25,7 +25,7 @@ export default function BookingDetailsScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         {/* Car Image */}
         <Image
-          source={require("@/assets/images/mclaren.png")}
+          source={require("@/assets/images/mclaren-big.png")}
           style={styles.carImage}
           resizeMode="cover"
         />
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   carImage: {
     width: "100%",
-    height: 180,
+    height: 217,
     borderRadius: 8,
     marginBottom: 16,
   },

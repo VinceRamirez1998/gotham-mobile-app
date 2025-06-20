@@ -32,10 +32,12 @@ export default function Garage() {
 
           {/* Vehicle Card */}
           <View style={styles.vehicleCard}>
-            <Image
-              source={require("@/assets/icons/arrow-up-right.png")}
-              style={styles.arrowIcon}
-            />
+            <Pressable onPress={() => router.push("/booking-details")}>
+              <Image
+                source={require("@/assets/icons/arrow-up-right.png")}
+                style={styles.arrowIcon}
+              />
+            </Pressable>
             <Image
               source={require("@/assets/images/user-img-default.png")}
               style={styles.vehicleThumb}
@@ -154,8 +156,8 @@ const styles = StyleSheet.create({
   },
   arrowIcon: {
     position: "absolute",
-    top: 8,
-    right: 8,
+    top: -5,
+    right: -10,
     height: 24,
     width: 24,
   },

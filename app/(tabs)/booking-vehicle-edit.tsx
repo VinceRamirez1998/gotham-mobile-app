@@ -141,7 +141,10 @@ export default function BookingVehicleEditScreen() {
               onChangeText={(val) => handleChange("plate", val)}
             />
 
-            <Pressable style={styles.button} onPress={() => router.back()}>
+            <Pressable
+              style={styles.button}
+              onPress={() => router.push("/booking-details")}
+            >
               <Text style={styles.buttonText}>Save Changes</Text>
             </Pressable>
           </ScrollView>

@@ -61,7 +61,10 @@ export default function VehicleDetailScreen() {
             {/* Vehicle Details Section */}
             <View style={styles.detailsHeader}>
               <Text style={styles.sectionTitle}>Vehicle Details</Text>
-              <TouchableOpacity style={styles.editButton}>
+              <TouchableOpacity
+                style={styles.editButton}
+                onPress={() => router.push("/booking-vehicle-edit")}
+              >
                 <Text style={styles.editText}>Edit</Text>
                 <Image
                   source={require("@/assets/icons/edit-icon.png")}

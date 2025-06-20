@@ -11,7 +11,7 @@ export default function GarageHeader() {
           style={styles.logo}
           resizeMode="contain"
         />
-        <Ionicons name="person-circle" size={28} color="#fff" />
+        <Ionicons name="notifications-circle-outline" size={28} color="#fff" />
       </View>
     </View>
   );

@@ -1,8 +1,12 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+// firebaseConfig.ts or firebaseConfig.js
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getApp, getApps, initializeApp } from "firebase/app";
+import {
+  getAuth,
+  getReactNativePersistence,
+  initializeAuth,
+} from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCCKwbRZsRariLI7KT1_MoKA9lFKsbfkSc",
   authDomain: "gotham-auto-mobile-appli-8c257.firebaseapp.com",
@@ -12,12 +16,28 @@ const firebaseConfig = {
   appId: "1:959316126052:web:7f8947ca41405f80a4b271",
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Only initialize once
+let app;
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApp();
+}
 
-// Export Firebase Auth instance
-export const auth = getAuth(app);
+// Check if running in React Native (not Web)
+let auth;
+if (typeof window === "undefined") {
+  // Only initialize if not already
+  try {
+    auth = initializeAuth(app, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    });
+  } catch (e) {
+    // fallback if already initialized
+    auth = getAuth(app);
+  }
+} else {
+  auth = getAuth(app);
+}
 
-// Optional: Export Firestore/Storage if you use them
-// export const db = getFirestore(app);
-// export const storage = getStorage(app);
+export { app, auth };

@@ -66,7 +66,7 @@ export default function BookServiceScreen() {
             keyboardShouldPersistTaps="handled"
           >
             <View style={styles.header}>
-              <Pressable onPress={() => router.push("/garage")}>
+              <Pressable onPress={() => router.push("/(tabs)")}>
                 <Ionicons name="chevron-back" size={24} color="#fff" />
               </Pressable>
               <Text style={styles.headerTitle}>Book A Service</Text>

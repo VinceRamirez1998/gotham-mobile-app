@@ -50,7 +50,7 @@ export default function BookingSuccessScreen() {
 
           <Pressable
             style={styles.primaryButton}
-            onPress={() => router.push("/garage")}
+            onPress={() => router.push("/(tabs)")}
           >
             <Text style={styles.primaryButtonText}>Back to my Garage</Text>
           </Pressable>

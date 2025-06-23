@@ -39,7 +39,7 @@ export default function SuccessScreen() {
         <View style={styles.footer}>
           <Pressable
             style={styles.button}
-            onPress={() => router.push("/garage")}
+            onPress={() => router.push("/(tabs)")}
           >
             <Text style={styles.buttonText}>Go to my Garage →</Text>
           </Pressable>

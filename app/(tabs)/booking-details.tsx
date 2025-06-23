@@ -19,7 +19,7 @@ export default function VehicleDetailScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
       <View style={styles.header}>
-        <Pressable onPress={() => router.push("/garage")}>
+        <Pressable onPress={() => router.push("/(tabs)")}>
           <Ionicons name="chevron-back" size={24} color="#fff" />
         </Pressable>
         <Text style={styles.headerTitle}>McLaren 720S</Text>

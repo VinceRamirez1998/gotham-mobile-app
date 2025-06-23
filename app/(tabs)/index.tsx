@@ -1,155 +1,260 @@
+import ContactSection from "@/components/ContactSection";
+import Footer from "@/components/Footer";
+import GarageHeader from "@/components/GarageHeader";
 import { router } from "expo-router";
 import {
   Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function LoginScreen() {
+export default function Garage() {
   return (
-    <ImageBackground
-      source={require("@/assets/images/login.png")}
-      style={styles.background}
-      resizeMode="cover"
-    >
-      <SafeAreaView style={styles.safeArea} edges={["top", "bottom"]}>
-        <KeyboardAvoidingView
-          style={styles.flex}
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
-        >
-          <View style={styles.logoWrapper}>
+    <SafeAreaView style={styles.safeArea} edges={["bottom"]}>
+      <ScrollView>
+        {/*  Wrapped all padded content inside a View */}
+        <View style={styles.container}>
+          {/* Header row */}
+          <GarageHeader />
+
+          <Text style={styles.welcome}>Welcome back, John!</Text>
+
+          {/* Promo */}
+          <Image
+            source={require("@/assets/images/promotional-banner.png")}
+            style={styles.promo}
+            resizeMode="cover"
+          />
+
+          {/* Vehicle Card */}
+          <View style={styles.vehicleCard}>
+            <Pressable onPress={() => router.push("/booking-details")}>
+              <Image
+                source={require("@/assets/icons/arrow-up-right.png")}
+                style={styles.arrowIcon}
+              />
+            </Pressable>
             <Image
-              source={require("@/assets/images/gothamlogo.png")}
-              style={styles.logo}
-              resizeMode="contain"
+              source={require("@/assets/images/user-img-default.png")}
+              style={styles.vehicleThumb}
             />
+            <Text style={styles.vehicleTitle}>Mclaren 720S</Text>
+            <Text style={styles.vehicleSubtext}>No Service Yet</Text>
+            <Pressable
+              style={styles.bookFullButton}
+              onPress={() => router.push("/booking-service")}
+            >
+              <Text style={styles.bookFullButtonText}>Book a Service</Text>
+            </Pressable>
           </View>
 
-          <ScrollView
-            contentContainerStyle={styles.scrollForm}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <View style={styles.form}>
-              <Text style={styles.title}>Welcome To Gotham Auto</Text>
-              <Text style={styles.subtitle}>
-                Start by entering your email or phone number to log in.
-              </Text>
-
-              <TextInput
-                style={styles.input}
-                placeholder="Enter your email or phone number"
-                placeholderTextColor="#aaa"
+          {/* Add Vehicle */}
+          <Pressable style={styles.addVehicle}>
+            <View style={styles.addVehicleContent}>
+              <Text style={styles.addVehicleText}>Add Vehicle</Text>
+              <Image
+                source={require("@/assets/icons/add-icon.png")}
+                style={styles.addVehicleIcon}
+                resizeMode="contain"
               />
-
-              <Pressable
-                style={styles.button}
-                onPress={() => router.push("/verification")}
-              >
-                <Text style={styles.buttonText}>Login</Text>
-              </Pressable>
-
-              <Text style={styles.footer}>
-                We’ll send you a one-time code to verify your identity.{"\n"}
-                No password needed.
-              </Text>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </ImageBackground>
+          </Pressable>
+
+          {/* Services Section */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Our services</Text>
+              <Image
+                source={require("@/assets/icons/arrow-right.png")}
+                style={styles.sectionArrow}
+              />
+            </View>
+
+            <View style={styles.serviceRow}>
+              <View style={styles.serviceCard}>
+                <Image
+                  source={require("@/assets/images/window-tinting.png")}
+                  style={styles.serviceImage}
+                />
+                <Text style={styles.serviceTitle}>Window Tinting</Text>
+                <Text style={styles.serviceDescription}>
+                  Protect your interior and upgrade your ride with premium
+                  tinting.
+                </Text>
+              </View>
+
+              <View style={styles.serviceCard}>
+                <Image
+                  source={require("@/assets/images/ceramic-coating.png")}
+                  style={styles.serviceImage}
+                />
+                <Text style={styles.serviceTitle}>Ceramic Coating</Text>
+                <Text style={styles.serviceDescription}>
+                  Elevate your vehicle’s finish with cutting-edge ceramic
+                  coating solution.
+                </Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Contact Section */}
+          <ContactSection />
+        </View>
+
+        {/* Footer  */}
+        <Footer />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-  },
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
-  },
   safeArea: {
     flex: 1,
+    backgroundColor: "#000",
   },
-  logoWrapper: {
+  container: {
+    padding: 15,
+    backgroundColor: "#000",
+  },
+  topRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    marginTop: Platform.OS === "ios" ? 120 : 100,
     marginBottom: 26,
   },
   logo: {
-    width: 226,
-    height: 45,
+    height: 24,
+    width: 120,
   },
-  scrollForm: {
-    paddingHorizontal: 24,
-    flexGrow: 1,
-    justifyContent: "flex-end", // this pushes form downward
-    paddingBottom: Platform.OS === "ios" ? 48 : 32,
-  },
-  form: {
-    width: "100%",
-    maxWidth: 400,
-    alignSelf: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    fontFamily: "Raleway",
-    color: "#ffffff",
-    textAlign: "center",
+  welcome: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#fff",
+    marginTop: 16,
     marginBottom: 8,
   },
-  subtitle: {
-    fontSize: 14,
-    fontWeight: "300",
-    fontFamily: "Inter",
-    color: "#cccccc",
-    textAlign: "center",
+  promo: {
+    width: "100%",
+    height: 140,
+    borderRadius: 8,
     marginBottom: 16,
-    paddingBottom: 16,
   },
-  input: {
-    height: 48,
-    borderColor: "#999999",
+
+  vehicleCard: {
+    backgroundColor: "#111",
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 12,
+    position: "relative",
     borderWidth: 1,
-    borderRadius: 4,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 14,
-    fontWeight: "400",
-    fontFamily: "Open Sans",
-    color: "#ffffff",
-    lineHeight: 22.4,
-    marginBottom: 42,
+    borderColor: "#2a2a2a",
   },
-  button: {
-    backgroundColor: "#f9f9f9",
-    opacity: 0.5,
-    paddingVertical: 12,
+  arrowIcon: {
+    position: "absolute",
+    top: -5,
+    right: -10,
+    height: 24,
+    width: 24,
+  },
+  vehicleThumb: {
+    width: 40,
+    height: 40,
+    borderRadius: 28,
+    marginRight: 12,
+    marginBottom: 32,
+  },
+  vehicleTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 2,
+  },
+  vehicleSubtext: {
+    fontSize: 12,
+    color: "#aaa",
+    marginBottom: 16,
+  },
+  bookFullButton: {
+    backgroundColor: "#f2f2f2",
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 4,
     alignItems: "center",
+    alignSelf: "stretch",
   },
-  buttonText: {
-    color: "#000000",
+  bookFullButtonText: {
+    fontSize: 14,
     fontWeight: "500",
+    color: "#000",
   },
-  footer: {
-    marginTop: 16,
-    fontSize: 12,
-    fontWeight: "200",
-    color: "#ffffff",
-    textAlign: "center",
-    lineHeight: 18,
+
+  addVehicle: {
+    alignSelf: "flex-end",
+    marginBottom: 16,
+  },
+  addVehicleContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  addVehicleText: {
+    color: "#fff",
+    fontSize: 14,
+  },
+  addVehicleIcon: {
+    width: 24,
+    height: 24,
+    tintColor: "#fff",
+  },
+  sectionTitle: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
+    marginBottom: 12,
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+
+  sectionArrow: {
+    width: 22,
+    height: 22,
+    tintColor: "#fff",
+  },
+  serviceRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  serviceCard: {
+    width: "48%",
+  },
+  serviceImage: {
+    width: "100%",
+    height: 100,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  serviceTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
+    marginBottom: 4,
+  },
+  serviceDescription: {
+    fontSize: 10,
+    color: "#ccc",
+    lineHeight: 14,
   },
 });

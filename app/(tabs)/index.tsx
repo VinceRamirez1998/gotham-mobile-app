@@ -71,10 +71,12 @@ export default function Garage() {
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Our services</Text>
-              <Image
-                source={require("@/assets/icons/arrow-right.png")}
-                style={styles.sectionArrow}
-              />
+              <Pressable onPress={() => router.push("/services")} hitSlop={12}>
+                <Image
+                  source={require("@/assets/icons/arrow-right.png")}
+                  style={styles.sectionArrow}
+                />
+              </Pressable>
             </View>
 
             <View style={styles.serviceRow}>

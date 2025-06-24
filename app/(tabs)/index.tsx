@@ -21,7 +21,7 @@ export default function Garage() {
           {/* Header row */}
           <GarageHeader />
 
-          <Text style={styles.welcome}>Welcome back, John!</Text>
+          <Text style={styles.welcome}>Welcome back, Vince!</Text>
 
           {/* Promo */}
           <Image
@@ -53,7 +53,10 @@ export default function Garage() {
           </View>
 
           {/* Add Vehicle */}
-          <Pressable style={styles.addVehicle}>
+          <Pressable
+            style={styles.addVehicle}
+            onPress={() => router.push("/add-vehicle")}
+          >
             <View style={styles.addVehicleContent}>
               <Text style={styles.addVehicleText}>Add Vehicle</Text>
               <Image

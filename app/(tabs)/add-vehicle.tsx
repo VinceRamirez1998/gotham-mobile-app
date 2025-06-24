@@ -19,7 +19,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function GarageSetupScreen() {
+export default function AddVehicleScreen() {
   const [form, setForm] = useState({
     make: "",
     model: "",
@@ -93,15 +93,15 @@ export default function GarageSetupScreen() {
           <Pressable onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={24} color="#fff" />
           </Pressable>
-          <Text style={styles.headerTitle}>Garage Setup</Text>
+          <Text style={styles.headerTitle}>Add a Vehicle</Text>
         </View>
 
         {/* Form */}
         <ScrollView contentContainerStyle={styles.form}>
-          <Text style={styles.title}>Next, Let’s Add Your Vehicle</Text>
+          <Text style={styles.title}>Add A Vehicle To Your Garage</Text>
           <Text style={styles.subtitle}>
-            This will be the first car in your virtual garage. You can always
-            add more later.
+            Add details and an option photo to manage bookings and subscription
+            for this vehicle.
           </Text>
 
           <Pressable style={styles.imageBox} onPress={handleImageAction}>
@@ -111,7 +111,7 @@ export default function GarageSetupScreen() {
               <Image source={{ uri: image }} style={styles.imagePreview} />
             ) : (
               <View style={styles.imagePlaceholder}>
-                <Ionicons name="cloud-upload-outline" size={32} color="#888" />
+                <Ionicons name="cloud-upload-outline" size={32} color="white" />
                 <Text style={styles.imageLabel}>
                   Upload a Photo of Your Vehicle
                 </Text>

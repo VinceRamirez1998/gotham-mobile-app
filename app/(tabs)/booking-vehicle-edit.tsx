@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
   },
   imageBox: {
     borderStyle: "dashed",
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#555",
     borderRadius: 8,
     height: 160,

@@ -1,97 +1,84 @@
 import ServiceCard from "@/components/ServiceCard";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { db } from "@/firebaseConfig"; // update path if needed
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+
+type Service = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  category: string;
+  order: number;
+};
 
 export default function ServicesScreen() {
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchServices() {
+      // NOTE: orderBy("order") ensures consistent ordering
+      const q = query(collection(db, "services"), orderBy("order", "asc"));
+      const querySnapshot = await getDocs(q);
+      const data: Service[] = [];
+      querySnapshot.forEach((doc) => {
+        data.push({ id: doc.id, ...doc.data() } as Service);
+      });
+      setServices(data);
+      setLoading(false);
+    }
+    fetchServices();
+  }, []);
+
+  // Group by category, but preserve order within group
+  const grouped = services.reduce((acc, item) => {
+    acc[item.category] = acc[item.category] || [];
+    acc[item.category].push(item);
+    return acc;
+  }, {} as Record<string, Service[]>);
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#191919",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" color="#fff" />
+        <Text style={{ color: "#fff", marginTop: 16 }}>Loading services…</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={{ paddingBottom: 32 }}
     >
       <Text style={styles.title}>Available Services</Text>
-      <Text style={styles.section}>WINDOW TINTING</Text>
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Classic Black"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Ceramic Carbon"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Ceramic Nano Black"
-        onPress={() => {}}
-      />
-      <Text style={styles.section}>CERAMIC COATING</Text>
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Max Package"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Diamond Package"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Pro Package"
-        onPress={() => {}}
-      />
-      <Text style={styles.section}>DETAILING AND PAINT CORRECTION</Text>
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Exterior Detailing"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Interior Detailing"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Full Detail Package"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="New Car Prep Package"
-        onPress={() => {}}
-      />
-      <Text style={styles.section}>OTHER SERVICES</Text>
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Clear Bra (PPF Film)"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Under Carriage Coating"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Vinyl Wrapping"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Wheel /Rim Repair"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Caliper Painting"
-        onPress={() => {}}
-      />
-      <ServiceCard
-        image={require("@/assets/images/ceramic-carbon.png")}
-        title="Armor Sheet Bed Liner"
-        onPress={() => {}}
-      />
+      {Object.entries(grouped).map(([category, items]) => (
+        <View key={category}>
+          <Text style={styles.section}>{category}</Text>
+          {items.map((service) => (
+            <ServiceCard
+              key={service.id}
+              image={{ uri: service.imageUrl }}
+              title={service.title}
+              onPress={() => {}}
+            />
+          ))}
+        </View>
+      ))}
     </ScrollView>
   );
 }

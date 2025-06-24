@@ -151,8 +151,7 @@ export default function LandingScreen() {
                 </Text>
               </Pressable>
               <Text style={styles.footer}>
-                For email: You'll get a magic link.
-                <br />
+                For email: You'll get a magic link.{"\n"}
                 For phone: (6-digit code coming soon)
               </Text>
             </View>

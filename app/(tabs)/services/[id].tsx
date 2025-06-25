@@ -5,6 +5,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -12,6 +13,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+const CARD_HEIGHT = 161;
+const IMAGE_WIDTH = 189; // Try 150-170 for mobile. If your screen is wider, go higher.
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const CARD_WIDTH = SCREEN_WIDTH - 32; // Assuming 16px padding left/right on the page.
 
 export default function ServiceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -132,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#191919",
     paddingHorizontal: 16,
-    paddingTop: 28,
+    paddingTop: 24,
   },
   centered: {
     flex: 1,
@@ -148,63 +154,71 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "500",
     color: "#fff",
+    fontFamily: "Inter",
   },
   image: {
     width: "100%",
     height: 160,
-    borderRadius: 12,
+    borderRadius: 0,
     marginBottom: 14,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     color: "#fff",
-    fontWeight: "600",
+    fontWeight: "700",
     marginBottom: 6,
   },
   desc: {
     color: "#bbb",
     fontSize: 12,
     marginBottom: 12,
+    fontWeight: "400",
+    fontFamily: "Inter",
   },
   // ---- COVERAGE ABSOLUTE CARD STYLES ----
   coverageCardAbs: {
     backgroundColor: "#232323",
-    borderRadius: 8,
+    borderRadius: 0,
     marginBottom: 18,
     borderWidth: 1,
     borderColor: "#3c3c3c",
     overflow: "hidden",
-    minHeight: 189, // Ensure enough height for car image
+    minHeight: CARD_HEIGHT,
+    width: "100%", // Ensure it fills parent
     position: "relative",
-    justifyContent: "flex-start",
   },
   coverageTextWrap: {
     paddingTop: 18,
     paddingLeft: 18,
-    paddingRight: 120, // Adjust to be at least image width for safe overlap (set to 286 for full width image)
+    paddingRight: IMAGE_WIDTH + 18, // 18 is a little gap between text and image
     paddingBottom: 18,
     zIndex: 2,
+    width: "100%",
   },
   coverageTitle: {
     color: "#fff",
-    fontWeight: "600",
+    fontWeight: "400",
     fontSize: 14,
-    marginBottom: 6,
+    marginBottom: 4,
   },
   coverageDesc: {
     color: "#bbb",
-    fontSize: 14,
+    fontSize: 12,
     flexWrap: "wrap",
+    fontWeight: "400",
   },
   coverageImgAbs: {
     position: "absolute",
     right: 0,
     bottom: 0,
-    width: 286, // Use 170~200 for phones, or 286 for true-to-Figma
-    height: 189, // Use 110~130 for phones, or 189 for true-to-Figma
+    width: IMAGE_WIDTH,
+    height: CARD_HEIGHT,
     zIndex: 1,
+    // Remove any margin/background
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
   },
   // ---- OTHER STYLES ----
   featureRow: {

@@ -1,5 +1,6 @@
 import ServiceCard from "@/components/ServiceCard";
-import { db } from "@/firebaseConfig"; // update path if needed
+import { db } from "@/firebaseConfig";
+import { useRouter } from "expo-router";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
@@ -28,6 +29,7 @@ const CATEGORY_ORDER = [
 export default function ServicesScreen() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchServices() {
@@ -95,7 +97,7 @@ export default function ServicesScreen() {
                 key={service.id}
                 image={{ uri: service.imageUrl }}
                 title={service.title}
-                onPress={() => {}}
+                onPress={() => router.push(`/services/${service.id}`)}
               />
             ))}
           </View>

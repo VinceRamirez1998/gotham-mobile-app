@@ -1,6 +1,6 @@
 import ServiceCard from "@/components/ServiceCard";
 import { db } from "@/firebaseConfig"; // update path if needed
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -18,31 +18,37 @@ type Service = {
   order: number;
 };
 
+const CATEGORY_ORDER = [
+  "WINDOW TINTING",
+  "CERAMIC COATING",
+  "DETAILING AND PAINT CORRECTION",
+  "OTHER SERVICES",
+];
+
 export default function ServicesScreen() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchServices() {
-      // NOTE: orderBy("order") ensures consistent ordering
-      const q = query(collection(db, "services"), orderBy("order", "asc"));
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(collection(db, "services"));
       const data: Service[] = [];
       querySnapshot.forEach((doc) => {
-        data.push({ id: doc.id, ...doc.data() } as Service);
+        const docData = doc.data();
+        data.push({
+          id: doc.id,
+          ...docData,
+          order:
+            typeof docData.order === "number"
+              ? docData.order
+              : Number(docData.order),
+        } as Service);
       });
       setServices(data);
       setLoading(false);
     }
     fetchServices();
   }, []);
-
-  // Group by category, but preserve order within group
-  const grouped = services.reduce((acc, item) => {
-    acc[item.category] = acc[item.category] || [];
-    acc[item.category].push(item);
-    return acc;
-  }, {} as Record<string, Service[]>);
 
   if (loading) {
     return (
@@ -60,25 +66,41 @@ export default function ServicesScreen() {
     );
   }
 
+  // Group by category
+  const grouped: Record<string, Service[]> = {};
+  services.forEach((service) => {
+    if (!grouped[service.category]) grouped[service.category] = [];
+    grouped[service.category].push(service);
+  });
+
+  // Sort each group by order
+  CATEGORY_ORDER.forEach((cat) => {
+    if (grouped[cat]) {
+      grouped[cat].sort((a, b) => a.order - b.order);
+    }
+  });
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={{ paddingBottom: 32 }}
     >
       <Text style={styles.title}>Available Services</Text>
-      {Object.entries(grouped).map(([category, items]) => (
-        <View key={category}>
-          <Text style={styles.section}>{category}</Text>
-          {items.map((service) => (
-            <ServiceCard
-              key={service.id}
-              image={{ uri: service.imageUrl }}
-              title={service.title}
-              onPress={() => {}}
-            />
-          ))}
-        </View>
-      ))}
+      {CATEGORY_ORDER.map((category) =>
+        grouped[category] && grouped[category].length > 0 ? (
+          <View key={category}>
+            <Text style={styles.section}>{category}</Text>
+            {grouped[category].map((service) => (
+              <ServiceCard
+                key={service.id}
+                image={{ uri: service.imageUrl }}
+                title={service.title}
+                onPress={() => {}}
+              />
+            ))}
+          </View>
+        ) : null
+      )}
     </ScrollView>
   );
 }

@@ -5,19 +5,18 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Dimensions,
   Image,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CARD_HEIGHT = 161;
-const IMAGE_WIDTH = 189; // Try 150-170 for mobile. If your screen is wider, go higher.
-const SCREEN_WIDTH = Dimensions.get("window").width;
-const CARD_WIDTH = SCREEN_WIDTH - 32; // Assuming 16px padding left/right on the page.
+const IMAGE_WIDTH = 189;
 
 export default function ServiceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -46,129 +45,141 @@ export default function ServiceDetailScreen() {
   }
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: 36 }}
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={["top", "bottom", "left", "right"]}
     >
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={{ paddingRight: 10 }}
-        >
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="chevron-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{service.title}</Text>
+        <Text style={styles.headerTitle} numberOfLines={1} ellipsizeMode="tail">
+          {service.title}
+        </Text>
       </View>
-      {/* Top Image */}
-      {service.topImage && (
-        <Image
-          source={{ uri: service.topImage }}
-          style={styles.image}
-          resizeMode="cover"
-        />
-      )}
-      {/* Title & Description */}
-      <Text style={styles.title}>{service.title}</Text>
-      {service.description && (
-        <Text style={styles.desc}>{service.description}</Text>
-      )}
-      {service.details && <Text style={styles.desc}>{service.details}</Text>}
 
-      {/* Features / Bullets */}
-      {service.features && (
-        <View style={{ marginBottom: 18 }}>
-          {service.features.map((item: string, idx: number) => (
-            <View key={idx} style={styles.featureRow}>
-              <Ionicons
-                name="checkmark-circle-outline"
-                size={16}
-                color="#aaa"
-                style={{ marginRight: 7 }}
-              />
-              <Text style={styles.featureText}>{item}</Text>
+      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
+        {/* Top Image (edge-to-edge) */}
+        {service.topImage && (
+          <Image
+            source={{ uri: service.topImage }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        )}
+
+        {/* All content with side padding */}
+        <View style={styles.body}>
+          {/* Title & Description */}
+          <Text style={styles.title}>{service.title}</Text>
+          {service.description && (
+            <Text style={styles.desc}>{service.description}</Text>
+          )}
+          {service.details && (
+            <Text style={styles.desc}>{service.details}</Text>
+          )}
+
+          {/* Features / Bullets */}
+          {service.features && (
+            <View style={{ marginBottom: 18 }}>
+              {service.features.map((item: string, idx: number) => (
+                <View key={idx} style={styles.featureRow}>
+                  <Ionicons
+                    name="checkmark-circle-outline"
+                    size={16}
+                    color="#aaa"
+                    style={{ marginRight: 7 }}
+                  />
+                  <Text style={styles.featureText}>{item}</Text>
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
-      )}
+          )}
 
-      {/* Coverage Cards for PPF/Clear Bra */}
-      {service.coverageOptions && (
-        <View style={{ marginBottom: 18 }}>
-          <Text style={styles.sectionHeader}>Coverage Options</Text>
-          {service.coverageOptions.map((opt: any, idx: number) => (
-            <View key={idx} style={styles.coverageCardAbs}>
-              <View style={styles.coverageTextWrap}>
-                <Text style={styles.coverageTitle}>{opt.title}</Text>
-                <Text style={styles.coverageDesc}>{opt.desc}</Text>
-              </View>
-              <Image
-                source={{ uri: opt.imageUrl }}
-                style={styles.coverageImgAbs}
-                resizeMode="contain"
-              />
+          {/* Coverage Options */}
+          {service.coverageOptions && (
+            <View style={{ marginBottom: 18 }}>
+              <Text style={styles.sectionHeader}>Coverage Options</Text>
+              {service.coverageOptions.map((opt: any, idx: number) => (
+                <View key={idx} style={styles.coverageCardAbs}>
+                  <View style={styles.coverageTextWrap}>
+                    <Text style={styles.coverageTitle}>{opt.title}</Text>
+                    <Text style={styles.coverageDesc}>{opt.desc}</Text>
+                  </View>
+                  <Image
+                    source={{ uri: opt.imageUrl }}
+                    style={styles.coverageImgAbs}
+                    resizeMode="contain"
+                  />
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
-      )}
+          )}
 
-      {/* Price Table */}
-      {service.priceOptions && (
-        <View style={{ marginBottom: 12 }}>
-          <Text style={styles.sectionHeader}>Price</Text>
-          {service.priceOptions.map((item: any, idx: number) => (
-            <View key={idx} style={styles.priceBox}>
-              <Text style={styles.priceLabel}>{item.label}</Text>
-              <Text style={styles.priceValue}>{item.price}</Text>
+          {/* Price Table */}
+          {service.priceOptions && (
+            <View style={{ marginBottom: 12 }}>
+              <Text style={styles.sectionHeader}>Price</Text>
+              {service.priceOptions.map((item: any, idx: number) => (
+                <View key={idx} style={styles.priceBox}>
+                  <Text style={styles.priceLabel}>{item.label}</Text>
+                  <Text style={styles.priceValue}>{item.price}</Text>
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
-      )}
+          )}
 
-      {/* Book Button */}
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Book Service</Text>
-      </TouchableOpacity>
-    </ScrollView>
+          {/* Book Button */}
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Book Service</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#191919",
-    paddingHorizontal: 16,
-    paddingTop: 24,
-  },
-  centered: {
-    flex: 1,
-    backgroundColor: "#191919",
-    alignItems: "center",
-    justifyContent: "center",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
-    marginTop: 10,
+    gap: 8,
+    paddingHorizontal: 24,
+    paddingTop: Platform.OS === "ios" ? 60 : 40,
+    marginBottom: 12,
+    backgroundColor: "#191919",
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "500",
     color: "#fff",
+    flexShrink: 1,
     fontFamily: "Inter",
   },
   image: {
     width: "100%",
-    height: 160,
+    height: 217,
     borderRadius: 0,
-    marginBottom: 14,
+    marginBottom: 16,
+    alignSelf: "center",
+    backgroundColor: "#222",
+  },
+  body: {
+    paddingHorizontal: 24,
+    paddingBottom: 30,
   },
   title: {
     fontSize: 20,
     color: "#fff",
     fontWeight: "700",
-    marginBottom: 6,
+    marginBottom: 8,
+    marginTop: 6,
+    fontFamily: "Raleway",
   },
   desc: {
     color: "#bbb",
@@ -176,6 +187,22 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontWeight: "400",
     fontFamily: "Inter",
+  },
+  featureRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  featureText: {
+    color: "#bbb",
+    fontSize: 14,
+  },
+  sectionHeader: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: 16,
+    marginTop: 10,
+    marginBottom: 10,
   },
   // ---- COVERAGE ABSOLUTE CARD STYLES ----
   coverageCardAbs: {
@@ -186,20 +213,20 @@ const styles = StyleSheet.create({
     borderColor: "#3c3c3c",
     overflow: "hidden",
     minHeight: CARD_HEIGHT,
-    width: "100%", // Ensure it fills parent
+    width: "100%",
     position: "relative",
   },
   coverageTextWrap: {
     paddingTop: 18,
     paddingLeft: 18,
-    paddingRight: IMAGE_WIDTH + 18, // 18 is a little gap between text and image
+    paddingRight: IMAGE_WIDTH + 18,
     paddingBottom: 18,
     zIndex: 2,
     width: "100%",
   },
   coverageTitle: {
     color: "#fff",
-    fontWeight: "400",
+    fontWeight: "500",
     fontSize: 14,
     marginBottom: 4,
   },
@@ -216,26 +243,8 @@ const styles = StyleSheet.create({
     width: IMAGE_WIDTH,
     height: CARD_HEIGHT,
     zIndex: 1,
-    // Remove any margin/background
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
-  },
-  // ---- OTHER STYLES ----
-  featureRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 3,
-  },
-  featureText: {
-    color: "#bbb",
-    fontSize: 14,
-  },
-  sectionHeader: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 15,
-    marginTop: 10,
-    marginBottom: 10,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
   },
   priceBox: {
     borderWidth: 1,
@@ -259,14 +268,15 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 22,
     backgroundColor: "#fff",
-    borderRadius: 8,
+    borderRadius: 7,
     alignItems: "center",
     paddingVertical: 15,
     marginBottom: 30,
   },
   buttonText: {
     color: "#191919",
-    fontWeight: "600",
+    fontWeight: "500",
     fontSize: 16,
+    fontFamily: "Raleway",
   },
 });

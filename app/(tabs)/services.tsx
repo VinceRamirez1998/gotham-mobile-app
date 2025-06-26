@@ -5,6 +5,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -54,16 +55,19 @@ export default function ServicesScreen() {
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#191919",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <ActivityIndicator size="large" color="#fff" />
-        <Text style={{ color: "#fff", marginTop: 16 }}>Loading services…</Text>
+      <View style={styles.logoLoader}>
+        <View style={styles.verticalCenter}>
+          <ActivityIndicator
+            size="large"
+            color="#fff"
+            style={{ marginBottom: 2 }}
+          />
+          <Image
+            source={require("@/assets/images/gothamlogo.png")}
+            style={styles.logoImg}
+            resizeMode="contain"
+          />
+        </View>
       </View>
     );
   }
@@ -108,6 +112,22 @@ export default function ServicesScreen() {
 }
 
 const styles = StyleSheet.create({
+  logoLoader: {
+    flex: 1,
+    backgroundColor: "#191919",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  verticalCenter: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoImg: {
+    width: 120,
+    height: 70,
+    marginTop: 8,
+  },
+
   container: {
     flex: 1,
     backgroundColor: "#191919",

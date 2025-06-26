@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     paddingHorizontal: 24,
-    paddingTop: Platform.OS === "ios" ? 60 : 40,
-    marginBottom: 12,
+    paddingTop: Platform.OS === "ios" ? 20 : 10,
+    marginBottom: 24,
     backgroundColor: "#191919",
   },
   headerTitle: {

@@ -85,11 +85,10 @@ export default function ServiceDetailScreen() {
             <View style={{ marginBottom: 18 }}>
               {service.features.map((item: string, idx: number) => (
                 <View key={idx} style={styles.featureRow}>
-                  <Ionicons
-                    name="checkmark-circle-outline"
-                    size={16}
-                    color="#aaa"
-                    style={{ marginRight: 7 }}
+                  <Image
+                    source={require("@/assets/icons/bullet-icon.png")}
+                    style={styles.bulletIcon}
+                    resizeMode="contain"
                   />
                   <Text style={styles.featureText}>{item}</Text>
                 </View>
@@ -249,7 +248,7 @@ const styles = StyleSheet.create({
   priceBox: {
     borderWidth: 1,
     borderColor: "#3c3c3c",
-    borderRadius: 6,
+    borderRadius: 0,
     backgroundColor: "#232323",
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -278,5 +277,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 16,
     fontFamily: "Raleway",
+  },
+
+  bulletIcon: {
+    width: 17,
+    height: 17,
+    marginRight: 7,
   },
 });

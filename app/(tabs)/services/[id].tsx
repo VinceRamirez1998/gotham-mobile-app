@@ -83,17 +83,17 @@ export default function ServiceDetailScreen() {
         </Text>
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-        {/* Top Image (edge-to-edge) */}
-        {service.topImage && (
-          <Image
-            source={{ uri: service.topImage }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        )}
+      {/* Top Image (fixed, does not scroll) */}
+      {service.topImage && (
+        <Image
+          source={{ uri: service.topImage }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      )}
 
-        {/* All content with side padding */}
+      {/* Scrollable Content */}
+      <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
         <View style={styles.body}>
           {/* Title & Description */}
           <Text style={styles.title}>{service.title}</Text>
@@ -192,9 +192,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     paddingHorizontal: 14,
-    paddingTop: Platform.OS === "ios" ? 20 : 10,
-    marginBottom: 14,
+    paddingTop: Platform.OS === "ios" ? 30 : 25,
+    marginBottom: 20,
     backgroundColor: "#191919",
+    zIndex: 2,
   },
   headerTitle: {
     fontSize: 17,
@@ -207,13 +208,14 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 217,
     borderRadius: 0,
-    marginBottom: 16,
     alignSelf: "center",
     backgroundColor: "#222",
+    zIndex: 1,
   },
   body: {
     paddingHorizontal: 24,
     paddingBottom: 30,
+    paddingTop: 16,
   },
   title: {
     fontSize: 20,
@@ -232,16 +234,15 @@ const styles = StyleSheet.create({
   },
   featureRow: {
     flexDirection: "row",
-    alignItems: "flex-start", // Not "center", use "flex-start" for top alignment
+    alignItems: "flex-start",
     marginBottom: 4,
-    gap: 0, // Remove if any
   },
   featureText: {
     color: "#E9E9E9",
     fontSize: 12,
     fontWeight: "400",
     fontFamily: "Inter",
-    flex: 1, // Allow text to wrap and use the remaining row space
+    flex: 1,
   },
   sectionHeader: {
     color: "#fff",
@@ -329,5 +330,6 @@ const styles = StyleSheet.create({
     width: 17,
     height: 17,
     marginRight: 7,
+    marginTop: -1,
   },
 });

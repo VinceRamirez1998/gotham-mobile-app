@@ -107,6 +107,11 @@ export default function ServiceDetailScreen() {
           {/* Features / Bullets */}
           {service.features && (
             <View style={{ marginBottom: 18 }}>
+              {service.sectionHeader && (
+                <Text style={styles.sectionHeader}>
+                  {service.sectionHeader}
+                </Text>
+              )}
               {service.features.map((item: string, idx: number) => (
                 <View key={idx} style={styles.featureRow}>
                   <Image
@@ -238,6 +243,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "700",
     fontSize: 16,
+    fontFamily: "Raleway",
     marginTop: 10,
     marginBottom: 10,
   },

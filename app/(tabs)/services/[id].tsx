@@ -21,11 +21,24 @@ const IMAGE_WIDTH = 189;
 export default function ServiceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const [service, setService] = useState<any>(null);
 
+  const [service, setService] = useState<any>(null);
+  const [showLoader, setShowLoader] = useState(true);
+
+  // Loader with logo for at least 2 seconds
+  useEffect(() => {
+    setShowLoader(true);
+    const timer = setTimeout(() => {
+      setShowLoader(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [id]);
+
+  // Firestore data
   useEffect(() => {
     async function fetchService() {
       if (!id) return;
+      setService(null);
       const docRef = doc(db, "serviceDetails", id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
@@ -35,11 +48,22 @@ export default function ServiceDetailScreen() {
     fetchService();
   }, [id]);
 
-  if (!service) {
+  // Loader shown while loading or before 2s is up
+  if (showLoader || !service) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#fff" />
-        <Text style={{ color: "#fff", marginTop: 16 }}>Loading...</Text>
+      <View style={styles.logoLoader}>
+        <View style={styles.verticalCenter}>
+          <ActivityIndicator
+            size="large"
+            color="#fff"
+            style={{ marginBottom: 2 }}
+          />
+          <Image
+            source={require("@/assets/images/gothamlogo.png")}
+            style={styles.logoImg}
+            resizeMode="contain"
+          />
+        </View>
       </View>
     );
   }
@@ -144,6 +168,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#191919",
   },
+  logoLoader: {
+    flex: 1,
+    backgroundColor: "#191919",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  verticalCenter: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logoImg: {
+    width: 160,
+    height: 110,
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -203,7 +241,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
   },
-  // ---- COVERAGE ABSOLUTE CARD STYLES ----
   coverageCardAbs: {
     backgroundColor: "#232323",
     borderRadius: 0,
@@ -278,7 +315,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Raleway",
   },
-
   bulletIcon: {
     width: 17,
     height: 17,

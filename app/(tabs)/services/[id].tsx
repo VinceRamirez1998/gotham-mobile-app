@@ -236,8 +236,10 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   featureText: {
-    color: "#bbb",
-    fontSize: 14,
+    color: "#E9E9E9",
+    fontSize: 12,
+    fontWeight: "400",
+    fontFamily: "Inter",
   },
   sectionHeader: {
     color: "#fff",

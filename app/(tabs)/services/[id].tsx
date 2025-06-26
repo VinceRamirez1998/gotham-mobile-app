@@ -232,14 +232,16 @@ const styles = StyleSheet.create({
   },
   featureRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start", // Not "center", use "flex-start" for top alignment
     marginBottom: 4,
+    gap: 0, // Remove if any
   },
   featureText: {
     color: "#E9E9E9",
     fontSize: 12,
     fontWeight: "400",
     fontFamily: "Inter",
+    flex: 1, // Allow text to wrap and use the remaining row space
   },
   sectionHeader: {
     color: "#fff",

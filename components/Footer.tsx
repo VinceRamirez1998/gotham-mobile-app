@@ -34,7 +34,7 @@ export default function Footer() {
   const tabs = [
     {
       label: "Garage",
-      route: "/garage",
+      route: "/(tabs)",
       icon: require("@/assets/icons/garage.png"),
       iconActive: require("@/assets/icons/garage-active.png"),
     },

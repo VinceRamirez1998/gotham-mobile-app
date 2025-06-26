@@ -75,7 +75,7 @@ export default function ServiceDetailScreen() {
     >
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.replace("/services")}>
           <Ionicons name="chevron-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle} numberOfLines={1} ellipsizeMode="tail">
@@ -179,8 +179,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logoImg: {
-    width: 160,
-    height: 110,
+    width: 130,
+    height: 100,
   },
   header: {
     flexDirection: "row",

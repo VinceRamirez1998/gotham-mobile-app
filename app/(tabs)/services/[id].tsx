@@ -122,6 +122,25 @@ export default function ServiceDetailScreen() {
             </View>
           )}
 
+          {/* Render additional section if present */}
+          {service.additionalFeatures && service.additionalHeader && (
+            <View style={{ marginTop: 12, marginBottom: 0 }}>
+              <Text style={styles.sectionHeader}>
+                {service.additionalHeader}
+              </Text>
+              {service.additionalFeatures.map((item: string, idx: number) => (
+                <View key={idx} style={styles.featureRow}>
+                  <Image
+                    source={require("@/assets/icons/bullet-icon.png")}
+                    style={styles.bulletIcon}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.featureText}>{item}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
           {/* Put this directly BELOW the features block */}
           {service.details && (
             <Text style={[styles.desc, { marginTop: 20 }]}>

@@ -100,13 +100,10 @@ export default function ServiceDetailScreen() {
           {service.description && (
             <Text style={styles.desc}>{service.description}</Text>
           )}
-          {service.details && (
-            <Text style={styles.desc}>{service.details}</Text>
-          )}
 
           {/* Features / Bullets */}
           {service.features && (
-            <View style={{ marginBottom: 18 }}>
+            <View style={{ marginBottom: 0 }}>
               {service.sectionHeader && (
                 <Text style={styles.sectionHeader}>
                   {service.sectionHeader}
@@ -123,6 +120,13 @@ export default function ServiceDetailScreen() {
                 </View>
               ))}
             </View>
+          )}
+
+          {/* Put this directly BELOW the features block */}
+          {service.details && (
+            <Text style={[styles.desc, { marginTop: 20 }]}>
+              {service.details}
+            </Text>
           )}
 
           {/* Coverage Options */}

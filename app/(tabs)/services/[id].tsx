@@ -15,6 +15,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+// ← added:
+import VehiclePickerModal, { Vehicle } from "@/components/VehiclePickerModal";
+
 const CARD_HEIGHT = 161;
 const IMAGE_WIDTH = 189;
 
@@ -22,15 +25,29 @@ export default function ServiceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
 
+  // ← added:
+  const [modalVisible, setModalVisible] = useState(false);
+
   const [service, setService] = useState<any>(null);
   const [showLoader, setShowLoader] = useState(true);
+
+  // ← added:
+  const handleSelect = (vehicle: Vehicle) => {
+    setModalVisible(false);
+    // Navigate to your booking-service screen, passing service id + vehicle id
+    router.push({
+      pathname: "/booking-service",
+      params: {
+        id,                            // your service ID
+        vehicle: vehicle.id            // the chosen vehicle
+      }
+    });
+  };
 
   // Loader with logo for at least 2 seconds
   useEffect(() => {
     setShowLoader(true);
-    const timer = setTimeout(() => {
-      setShowLoader(false);
-    }, 2000);
+    const timer = setTimeout(() => setShowLoader(false), 2000);
     return () => clearTimeout(timer);
   }, [id]);
 
@@ -48,7 +65,7 @@ export default function ServiceDetailScreen() {
     fetchService();
   }, [id]);
 
-  // Loader shown while loading or before 2s is up
+  // Show loader
   if (showLoader || !service) {
     return (
       <View style={styles.logoLoader}>
@@ -78,12 +95,16 @@ export default function ServiceDetailScreen() {
         <TouchableOpacity onPress={() => router.replace("/services")}>
           <Ionicons name="chevron-back" size={24} color="#fff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle} numberOfLines={1} ellipsizeMode="tail">
+        <Text
+          style={styles.headerTitle}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
           {service.title}
         </Text>
       </View>
 
-      {/* Top Image (fixed, does not scroll) */}
+      {/* Top Image */}
       {service.topImage && (
         <Image
           source={{ uri: service.topImage }}
@@ -92,7 +113,7 @@ export default function ServiceDetailScreen() {
         />
       )}
 
-      {/* Scrollable Content */}
+      {/* Content */}
       <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
         <View style={styles.body}>
           {/* Title & Description */}
@@ -101,9 +122,9 @@ export default function ServiceDetailScreen() {
             <Text style={styles.desc}>{service.description}</Text>
           )}
 
-          {/* Features / Bullets */}
+          {/* Features */}
           {service.features && (
-            <View style={{ marginBottom: 0 }}>
+            <View>
               {service.sectionHeader && (
                 <Text style={styles.sectionHeader}>
                   {service.sectionHeader}
@@ -122,9 +143,9 @@ export default function ServiceDetailScreen() {
             </View>
           )}
 
-          {/* Render additional section if present */}
+          {/* Additional Features */}
           {service.additionalFeatures && service.additionalHeader && (
-            <View style={{ marginTop: 12, marginBottom: 0 }}>
+            <View style={{ marginTop: 12 }}>
               <Text style={styles.sectionHeader}>
                 {service.additionalHeader}
               </Text>
@@ -141,7 +162,7 @@ export default function ServiceDetailScreen() {
             </View>
           )}
 
-          {/* Put this directly BELOW the features block */}
+          {/* Details */}
           {service.details && (
             <Text style={[styles.desc, { marginTop: 20 }]}>
               {service.details}
@@ -181,12 +202,22 @@ export default function ServiceDetailScreen() {
             </View>
           )}
 
-          {/* Book Button */}
-          <TouchableOpacity style={styles.button}>
+          {/* ← modified: open modal instead of direct booking */}
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setModalVisible(true)}
+          >
             <Text style={styles.buttonText}>Book Service</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* ← added: vehicle-picker modal */}
+      <VehiclePickerModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSelect={handleSelect}
+      />
     </SafeAreaView>
   );
 }
@@ -230,8 +261,6 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 217,
-    borderRadius: 0,
-    alignSelf: "center",
     backgroundColor: "#222",
     zIndex: 1,
   },
@@ -277,20 +306,17 @@ const styles = StyleSheet.create({
   },
   coverageCardAbs: {
     backgroundColor: "#232323",
-    borderRadius: 0,
-    marginBottom: 18,
     borderWidth: 1,
     borderColor: "#3c3c3c",
+    marginBottom: 18,
     overflow: "hidden",
     minHeight: CARD_HEIGHT,
     width: "100%",
     position: "relative",
   },
   coverageTextWrap: {
-    paddingTop: 18,
-    paddingLeft: 18,
+    padding: 18,
     paddingRight: IMAGE_WIDTH + 18,
-    paddingBottom: 18,
     zIndex: 2,
     width: "100%",
   },
@@ -303,7 +329,6 @@ const styles = StyleSheet.create({
   coverageDesc: {
     color: "#bbb",
     fontSize: 12,
-    flexWrap: "wrap",
     fontWeight: "400",
   },
   coverageImgAbs: {
@@ -319,7 +344,6 @@ const styles = StyleSheet.create({
   priceBox: {
     borderWidth: 1,
     borderColor: "#3c3c3c",
-    borderRadius: 0,
     backgroundColor: "#232323",
     paddingHorizontal: 12,
     paddingVertical: 10,

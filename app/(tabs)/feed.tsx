@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     position: "absolute",
-    bottom: 65,
+    bottom: 0,
     left: 0,
     right: 0,
   },

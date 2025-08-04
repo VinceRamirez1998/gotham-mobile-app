@@ -5,8 +5,8 @@ import React from "react";
 import {
   Dimensions,
   Image,
+  ImageBackground,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -31,60 +31,70 @@ export default function ProfileScreen() {
 
   return (
     <SafeAreaView style={[styles.page, { paddingBottom: insets.bottom }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Profile</Text>
-        <Pressable onPress={() => router.back()} style={styles.headerButton}>
-          {/* swap in whatever icon you like */}
-          <Image
-            source={require("@/assets/icons/arrow-up-right.png")}
-            style={styles.headerIcon}
-          />
-        </Pressable>
-      </View>
-
-      {/* Main content */}
-      <ScrollView
-        contentContainerStyle={[
-          styles.contentContainer,
-          { paddingBottom: FOOTER_HEIGHT + insets.bottom + 16 },
-        ]}
-        showsVerticalScrollIndicator={false}
+      <ImageBackground
+        source={require("@/assets/images/profile-bg.webp")}
+        style={styles.background}
+        imageStyle={styles.backgroundImage}
+        resizeMode="cover"
       >
-        <Image
-          source={require("@/assets/images/gothamlogo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Personal Information</Text>
-            <Pressable
-              onPress={() => router.push("/profile/edit")}
-              style={styles.editButton}
-            >
-              <Text style={styles.editText}>Edit</Text>
-              <Image
-                source={require("@/assets/icons/edit-icon.png")}
-                style={styles.editIcon}
-              />
-            </Pressable>
-          </View>
-
-          {personalInfo.map((f) => (
-            <View key={f.label} style={styles.fieldRow}>
-              <Text style={styles.fieldLabel}>{f.label}</Text>
-              <Text style={styles.fieldValue}>{f.value}</Text>
-            </View>
-          ))}
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Profile</Text>
+          <Pressable onPress={() => router.back()} style={styles.headerButton}>
+            <Image
+              source={require("@/assets/icons/signout.png")}
+              style={styles.headerIcon}
+            />
+          </Pressable>
         </View>
-      </ScrollView>
 
-      {/* Sticky footer only on this page */}
-      <View style={styles.footer}>
-        <FooterNav />
-      </View>
+
+        {/* This wrapper pushes its children to the bottom */}
+        <View
+          style={[
+            styles.contentWrapper,
+            {
+              paddingBottom: FOOTER_HEIGHT + insets.bottom + 16,
+            },
+          ]}
+        >
+          <View style={styles.card}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>Personal Information</Text>
+              <Pressable
+                onPress={() => router.push("/profile/edit")}
+                style={styles.editButton}
+              >
+                <Text style={styles.editText}>Edit</Text>
+                <Image
+                  source={require("@/assets/icons/edit-icon.png")}
+                  style={styles.editIcon}
+                />
+              </Pressable>
+            </View>
+
+            {personalInfo.map((f) => (
+              <View key={f.label} style={styles.fieldRow}>
+                <Text style={styles.fieldLabel}>{f.label}</Text>
+                <Text style={styles.fieldValue}>{f.value}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Sticky footer */}
+        <View
+          style={[
+            styles.footer,
+            {
+              bottom: insets.bottom,
+              height: FOOTER_HEIGHT,
+            },
+          ]}
+        >
+          <FooterNav />
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -92,7 +102,15 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   page: {
     flex: 1,
-    backgroundColor: "#191919",
+    backgroundColor: "#000",
+  },
+  background: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  backgroundImage: {
+    resizeMode: "cover",
   },
   header: {
     flexDirection: "row",
@@ -110,25 +128,27 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   headerButton: {
-    padding: 8,
+    width: 50,
+    height: 50,
+    borderRadius: 30,          // makes it a perfect circle
+    backgroundColor: "#191919",
+    justifyContent: "center",  // center the icon vertically
+    alignItems: "center",      // center the icon horizontally
   },
   headerIcon: {
     width: 24,
     height: 24,
     tintColor: "#fff",
   },
-  contentContainer: {
+  // **NEW**: wrapper that pushes content (the card) to the bottom
+  contentWrapper: {
+    flex: 1,
+    justifyContent: "flex-end",
     paddingHorizontal: 16,
-    paddingTop: 24,
   },
-  logo: {
-    width: screenWidth * 0.8,
-    height: 120,
-    alignSelf: "center",
-    marginBottom: 24,
-  },
+
   card: {
-    backgroundColor: "#222",
+    backgroundColor: "rgba(34,34,34,0.8)",
     borderRadius: 12,
     padding: 16,
   },
@@ -159,20 +179,22 @@ const styles = StyleSheet.create({
   },
   fieldRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "flex-start",
     marginBottom: 12,
   },
   fieldLabel: {
+    width: 130,     
     fontSize: 14,
     color: "#aaa",
   },
   fieldValue: {
+    flex: 1,  
     fontSize: 14,
     color: "#fff",
+    textAlign: "left",
   },
   footer: {
     position: "absolute",
-    bottom: 0,
     left: 0,
     right: 0,
     zIndex: 10,

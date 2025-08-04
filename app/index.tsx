@@ -13,9 +13,9 @@ export default function Home() {
       </Pressable>
       <Pressable
         style={styles.button}
-        onPress={() => router.replace("/garage")}
+        onPress={() => router.replace("/profile")}
       >
-        <Text style={styles.buttonText}>Go to Garage</Text>
+        <Text style={styles.buttonText}>Go to Profile</Text>
       </Pressable>
       <Pressable
         style={styles.button}

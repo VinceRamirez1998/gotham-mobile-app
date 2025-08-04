@@ -1,9 +1,9 @@
 // app/(tabs)/FeedScreen.tsx
 
-import Footer from "@/components/Footer";
 import React from "react";
 import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import FooterNav from "../../components/FooterNav";
 
 // Direct URLs from Firebase console
 const BG_URL =
@@ -39,8 +39,9 @@ export default function FeedScreen() {
         </View>
       </ImageBackground>
 
-      {/* Footer Tab Bar */}
-      <Footer />
+      <View style={styles.footer}>
+        <FooterNav />
+      </View>
     </SafeAreaView>
   );
 }
@@ -89,5 +90,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     lineHeight: 20,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 65,
+    left: 0,
+    right: 0,
   },
 });

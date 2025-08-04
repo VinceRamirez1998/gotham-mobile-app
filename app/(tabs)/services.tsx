@@ -1,3 +1,4 @@
+// app/services.tsx
 import ServiceCard from "@/components/ServiceCard";
 import { db } from "@/firebaseConfig";
 import { useRouter } from "expo-router";
@@ -5,21 +6,14 @@ import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
+import FooterNav from "../../components/FooterNav";
 
-type Service = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  category: string;
-  order: number;
-};
-
+type Service = { id: string; title: string; imageUrl: string; category: string; order: number; };
 const CATEGORY_ORDER = [
   "WINDOW TINTING",
   "CERAMIC COATING",
@@ -34,18 +28,11 @@ export default function ServicesScreen() {
 
   useEffect(() => {
     async function fetchServices() {
-      const querySnapshot = await getDocs(collection(db, "services"));
+      const snap = await getDocs(collection(db, "services"));
       const data: Service[] = [];
-      querySnapshot.forEach((doc) => {
-        const docData = doc.data();
-        data.push({
-          id: doc.id,
-          ...docData,
-          order:
-            typeof docData.order === "number"
-              ? docData.order
-              : Number(docData.order),
-        } as Service);
+      snap.forEach(doc => {
+        const d = doc.data() as any;
+        data.push({ id: doc.id, ...d, order: Number(d.order) });
       });
       setServices(data);
       setLoading(false);
@@ -55,84 +42,66 @@ export default function ServicesScreen() {
 
   if (loading) {
     return (
-      <View style={styles.logoLoader}>
-        <View style={styles.verticalCenter}>
-          <ActivityIndicator
-            size="large"
-            color="#fff"
-            style={{ marginBottom: 2 }}
-          />
-          <Image
-            source={require("@/assets/images/gothamlogo.png")}
-            style={styles.logoImg}
-            resizeMode="contain"
-          />
-        </View>
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color="#fff" />
       </View>
     );
   }
 
-  // Group by category
+  // group & sort
   const grouped: Record<string, Service[]> = {};
-  services.forEach((service) => {
-    if (!grouped[service.category]) grouped[service.category] = [];
-    grouped[service.category].push(service);
+  services.forEach(s => {
+    (grouped[s.category] ||= []).push(s);
   });
-
-  // Sort each group by order
-  CATEGORY_ORDER.forEach((cat) => {
-    if (grouped[cat]) {
-      grouped[cat].sort((a, b) => a.order - b.order);
-    }
-  });
+  CATEGORY_ORDER.forEach(cat => grouped[cat]?.sort((a, b) => a.order - b.order));
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: 32 }}
-    >
-      <Text style={styles.title}>Available Services</Text>
-      {CATEGORY_ORDER.map((category) =>
-        grouped[category] && grouped[category].length > 0 ? (
-          <View key={category}>
-            <Text style={styles.section}>{category}</Text>
-            {grouped[category].map((service) => (
-              <ServiceCard
-                key={service.id}
-                image={{ uri: service.imageUrl }}
-                title={service.title}
-                onPress={() => router.push(`/services/${service.id}`)}
-              />
-            ))}
-          </View>
-        ) : null
-      )}
-    </ScrollView>
+    <View style={styles.page}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ paddingBottom: 100 }}  // ← reserve space for footer
+      >
+        <Text style={styles.title}>Available Services</Text>
+        {CATEGORY_ORDER.map(cat =>
+          grouped[cat]?.length ? (
+            <View key={cat}>
+              <Text style={styles.section}>{cat}</Text>
+              {grouped[cat].map(s => (
+                <ServiceCard
+                  key={s.id}
+                  image={{ uri: s.imageUrl }}
+                  title={s.title}
+                  onPress={() => router.push(`/services/${s.id}`)}
+                />
+              ))}
+            </View>
+          ) : null
+        )}
+      </ScrollView>
+
+      {/* sticky footer */}
+      <View style={styles.footer}>
+        <FooterNav />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  logoLoader: {
+  page: {
     flex: 1,
     backgroundColor: "#191919",
-    justifyContent: "center",
-    alignItems: "center",
   },
-  verticalCenter: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoImg: {
-    width: 120,
-    height: 70,
-    marginTop: 8,
-  },
-
   container: {
     flex: 1,
-    backgroundColor: "#191919",
     paddingHorizontal: 16,
     paddingTop: 54,
+  },
+  loader: {
+    flex: 1,
+    backgroundColor: "#191919",
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 20,
@@ -143,8 +112,14 @@ const styles = StyleSheet.create({
   section: {
     fontSize: 12,
     color: "#aaa",
-    marginBottom: 8,
     marginTop: 16,
+    marginBottom: 8,
     letterSpacing: 1.2,
+  },
+  footer: {
+    position: "absolute",
+    bottom: 65,
+    left: 0,
+    right: 0,
   },
 });

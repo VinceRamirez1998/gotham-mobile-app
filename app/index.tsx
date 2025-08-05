@@ -7,9 +7,9 @@ export default function Home() {
       <Text style={styles.title}>DEV MODE: Gotham Auto</Text>
       <Pressable
         style={styles.button}
-        onPress={() => router.replace("/garage-setup")}
+        onPress={() => router.replace("/(auth)/success")}
       >
-        <Text style={styles.buttonText}>Go to Garage Setup</Text>
+        <Text style={styles.buttonText}>Go to Success</Text>
       </Pressable>
       <Pressable
         style={styles.button}

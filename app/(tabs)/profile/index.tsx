@@ -3,16 +3,16 @@
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-  Dimensions,
-  Image,
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
+    Dimensions,
+    Image,
+    ImageBackground,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
 } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import FooterNav from "../../components/FooterNav";
+import FooterNav from "../../../components/FooterNav";
 
 const screenWidth = Dimensions.get("window").width;
 const FOOTER_HEIGHT = 64;

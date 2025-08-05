@@ -1,11 +1,11 @@
 // components/FooterNav.tsx
 import { usePathname, useRouter } from "expo-router";
 import {
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 export default function FooterNav() {

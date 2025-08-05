@@ -130,17 +130,16 @@ const styles = StyleSheet.create({
   headerButton: {
     width: 50,
     height: 50,
-    borderRadius: 30,          // makes it a perfect circle
+    borderRadius: 30,         
     backgroundColor: "#191919",
-    justifyContent: "center",  // center the icon vertically
-    alignItems: "center",      // center the icon horizontally
+    justifyContent: "center",  
+    alignItems: "center",     
   },
   headerIcon: {
     width: 24,
     height: 24,
     tintColor: "#fff",
   },
-  // **NEW**: wrapper that pushes content (the card) to the bottom
   contentWrapper: {
     flex: 1,
     justifyContent: "flex-end",

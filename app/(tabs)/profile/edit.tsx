@@ -167,7 +167,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 'auto',            // push to bottom
-    marginBottom: 70,             // leave safe-area space
+    marginBottom: 20,             // leave safe-area space
+    marginHorizontal: 16,
     backgroundColor: '#FFF',
     borderRadius: 6,
     paddingVertical: 14,
